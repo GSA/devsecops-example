@@ -12,6 +12,7 @@ TODO
 
     ```sh
     aws s3api create-bucket --bucket devsecops-example
+    aws s3api put-bucket-versioning --bucket devsecops-example --versioning-configuration Status=Enabled
     ```
 
 1. Set up Terraform.
