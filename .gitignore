@@ -1,1 +1,6 @@
+## Terraform ##
+*.tfvars
+# Compiled files
+*.tfstate*
+# Module directory
 .terraform/
