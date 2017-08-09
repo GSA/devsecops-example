@@ -10,8 +10,11 @@ resource "aws_db_instance" "drupal" {
   engine = "postgres"
   engine_version = "9.6.2"
   instance_class = "db.t2.micro"
+
   name = "drupal"
   username = "drupaluser"
   password = "drupalpass"
+
   db_subnet_group_name = "${aws_db_subnet_group.drupal.name}"
+  vpc_security_group_ids = ["${aws_security_group.drupal_db.id}"]
 }
