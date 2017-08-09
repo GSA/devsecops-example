@@ -10,6 +10,8 @@ resource "aws_db_instance" "drupal" {
   engine = "postgres"
   engine_version = "9.6.2"
   instance_class = "db.t2.micro"
+  # just for development
+  skip_final_snapshot = true
 
   name = "drupal"
   username = "drupaluser"
