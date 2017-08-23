@@ -44,22 +44,22 @@ resource "aws_security_group" "drupal_ec2" {
 resource "aws_security_group" "drupal_db" {
   name        = "Drupal (DB)"
   description = "RDS security group for Drupal."
-  vpc_id      = "${data.aws_vpc.drupal.id}"
+  vpc_id      = "${module.vpc.vpc_id}"
   tags {
     Name = "Drupal RDS rules"
   }
 
   ingress {
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      cidr_blocks = ["${data.aws_vpc.drupal.cidr_block}"]
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["${var.vpc_cidr}"]
   }
 
   egress {
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      cidr_blocks = ["${data.aws_vpc.drupal.cidr_block}"]
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["${var.vpc_cidr}"]
   }
 }

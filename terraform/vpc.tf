@@ -7,9 +7,9 @@ module "vpc" {
 
   name = "devsecops-example"
 
-  cidr = "10.0.0.0/16"
-  public_subnets  = ["10.0.0.0/24"]
-  database_subnets = ["10.0.101.0/24", "10.0.102.0/24"]
+  cidr = "${var.vpc_cidr}"
+  public_subnets  = ["${var.public_subnet_cidr}"]
+  database_subnets = ["${var.database_subnet_cidrs}"]
 
   enable_nat_gateway = "true"
 
@@ -19,8 +19,4 @@ module "vpc" {
     "Terraform" = "true"
     "Repository" = "https://github.com/GSA/devsecops-example"
   }
-}
-
-data "aws_vpc" "drupal" {
-  id = "${module.vpc.vpc_id}"
 }
