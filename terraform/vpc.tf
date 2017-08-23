@@ -9,6 +9,14 @@ resource "aws_vpc" "drupal" {
   }
 }
 
+resource "aws_internet_gateway" "gw" {
+  vpc_id = "${aws_vpc.drupal.id}"
+
+  tags {
+    Name = "Drupal"
+  }
+}
+
 # one per region
 resource "aws_subnet" "drupal_a" {
   vpc_id = "${aws_vpc.drupal.id}"
