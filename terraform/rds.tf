@@ -1,9 +1,3 @@
-resource "aws_db_subnet_group" "drupal" {
-  name = "drupal"
-  description = "Database subnet group"
-  subnet_ids = ["${aws_subnet.drupal_a.id}", "${aws_subnet.drupal_b.id}"]
-}
-
 resource "aws_db_instance" "drupal" {
   allocated_storage = 10
   # https://www.drupal.org/docs/8/system-requirements/database-requirements
@@ -17,6 +11,6 @@ resource "aws_db_instance" "drupal" {
   username = "drupaluser"
   password = "drupalpass"
 
-  db_subnet_group_name = "${aws_db_subnet_group.drupal.name}"
+  db_subnet_group_name = "${module.vpc.database_subnet_group}"
   vpc_security_group_ids = ["${aws_security_group.drupal_db.id}"]
 }

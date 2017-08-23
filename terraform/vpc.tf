@@ -2,37 +2,25 @@ data "aws_region" "current" {
   current = true
 }
 
-resource "aws_vpc" "drupal" {
-  cidr_block = "10.0.0.0/16"
+module "vpc" {
+  source = "github.com/terraform-community-modules/tf_aws_vpc"
+
+  name = "devsecops-example"
+
+  cidr = "10.0.0.0/16"
+  public_subnets  = ["10.0.0.0/24"]
+  database_subnets = ["10.0.101.0/24", "10.0.102.0/24"]
+
+  enable_nat_gateway = "true"
+
+  azs = ["${data.aws_region.current.name}a", "${data.aws_region.current.name}b"]
+
   tags {
-    Name = "Drupal"
+    "Terraform" = "true"
+    "Repository" = "https://github.com/GSA/devsecops-example"
   }
 }
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = "${aws_vpc.drupal.id}"
-
-  tags {
-    Name = "Drupal"
-  }
-}
-
-# one per region
-resource "aws_subnet" "drupal_a" {
-  vpc_id = "${aws_vpc.drupal.id}"
-  cidr_block = "10.0.0.0/24"
-  availability_zone = "${data.aws_region.current.name}a"
-  map_public_ip_on_launch = true
-  tags {
-    Name = "Drupal subnet A"
-  }
-}
-resource "aws_subnet" "drupal_b" {
-  vpc_id = "${aws_vpc.drupal.id}"
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "${data.aws_region.current.name}b"
-  map_public_ip_on_launch = true
-  tags {
-    Name = "Drupal subnet B"
-  }
+data "aws_vpc" "drupal" {
+  id = "${module.vpc.vpc_id}"
 }
