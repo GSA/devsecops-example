@@ -12,6 +12,7 @@ module "vpc" {
   database_subnets = ["${var.database_subnet_cidrs}"]
 
   enable_nat_gateway = "true"
+  enable_dns_support = "true"
 
   azs = ["${data.aws_region.current.name}a", "${data.aws_region.current.name}b"]
 
