@@ -7,14 +7,10 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": [
-        "sudo apt-get install -y python-pip",
-        "pip install ansible"
-      ]
+      "script": "../packer/setup.sh"
     },
     {
-      "type": "ansible-local",
-      "galaxy_file": "../ansible/requirements.yml",
+      "type": "ansible",
       "playbook_file": "../ansible/drupal.yml"
     }
   ],

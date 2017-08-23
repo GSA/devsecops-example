@@ -1,6 +1,7 @@
 ---
 - hosts: all
-  tasks:
+  become: true
+  roles:
     - geerlingguy.nginx
     - geerlingguy.php
     - geerlingguy.php-mysql
