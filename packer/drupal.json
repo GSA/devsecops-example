@@ -4,6 +4,20 @@
     "aws_secret_key": "",
     "subnet_id": null
   },
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-get install -y python-pip",
+        "pip install ansible"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "galaxy_file": "../ansible/requirements.yml",
+      "playbook_file": "../ansible/drupal.yml"
+    }
+  ],
   "builders": [{
     "type": "amazon-ebs",
     "access_key": "{{user `aws_access_key`}}",

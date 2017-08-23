@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+    - geerlingguy.nginx
+    - geerlingguy.php
+    - geerlingguy.php-mysql
+    - geerlingguy.composer
+    - geerlingguy.drush
+    - geerlingguy.drupal
