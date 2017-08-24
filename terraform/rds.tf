@@ -1,8 +1,8 @@
 resource "aws_db_instance" "drupal" {
   allocated_storage = 10
   # https://www.drupal.org/docs/8/system-requirements/database-requirements
-  engine = "postgres"
-  engine_version = "9.6.2"
+  engine = "mysql"
+  engine_version = "5.7.17"
   instance_class = "db.t2.micro"
   # just for development
   skip_final_snapshot = true
