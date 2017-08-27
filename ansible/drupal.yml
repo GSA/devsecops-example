@@ -9,6 +9,39 @@
 
 - hosts: all
   become: true
+  vars:
+    # https://github.com/geerlingguy/ansible-role-drupal#create-a-new-project-using-drupal-project-composer
+    drupal_build_makefile: false
+    drupal_build_composer: false
+    drupal_build_composer_project: true
+    drupal_composer_project_package: "drupal-composer/drupal-project:8.x-dev"
+    drupal_composer_project_options: "--prefer-dist --stability dev --no-interaction"
+
+    # https://github.com/geerlingguy/ansible-role-drupal#required-drupal-site-settings
+    # corresponds to nginx_user
+    drupal_core_owner: www-data
+
+    # TODO move to geerlingguy.drupal
+    nginx_remove_default_vhost: true
+
+  pre_tasks:
+
+    # https://groups.google.com/d/msg/ansible-project/iIcXrvyNysU/Pej62thzLfIJ
+    - name: Check for required variables
+      fail:
+        msg: Variable '{{ item }}' is not defined
+      when: item not in hostvars[inventory_hostname] or hostvars[inventory_hostname][item] == ""
+      with_items:
+        - drupal_db_host
+        - drupal_db_name
+        - drupal_db_user
+        - drupal_db_password
+
+    - name: Install MySQL CLI (for Drush)
+      apt:
+        name: mysql-client
+        update_cache: true
+
   roles:
     - geerlingguy.nginx
     - geerlingguy.php
@@ -16,3 +49,23 @@
     - geerlingguy.composer
     - geerlingguy.drush
     - geerlingguy.drupal
+  tasks:
+
+    # TODO move to geerlingguy.drupal
+
+    - name: Write nginx config
+      template:
+        src: nginx.conf
+        dest: "{{ nginx_vhost_path }}/drupal.conf"
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - validate nginx configuration
+        - reload nginx
+
+    - name: Fix Drupal files/ directory permissions
+      file:
+        path: "{{ drupal_core_path }}/sites/default/files"
+        group: www-data
+        state: directory
