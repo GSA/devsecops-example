@@ -6,10 +6,6 @@
   },
   "provisioners": [
     {
-      "type": "shell",
-      "script": "../packer/setup.sh"
-    },
-    {
       "type": "ansible",
       "playbook_file": "../ansible/drupal.yml"
     }
