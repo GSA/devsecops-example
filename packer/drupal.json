@@ -2,12 +2,17 @@
   "variables": {
     "aws_access_key": "",
     "aws_secret_key": "",
+    "db_host": null,
+    "db_name": null,
+    "db_user": null,
+    "db_pass": null,
     "subnet_id": null
   },
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "../ansible/drupal.yml"
+      "playbook_file": "../ansible/drupal.yml",
+      "extra_arguments": ["--extra-vars", "drupal_db_host={{user `db_host`}} drupal_db_name={{user `db_name`}} drupal_db_user={{user `db_user`}} drupal_db_password={{user `db_pass`}}"]
     }
   ],
   "builders": [{
