@@ -1,0 +1,8 @@
+---
+# based on https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+  - name: Install Python 2
+    raw: test -e /usr/bin/python || (apt-get -y update && apt-get install -y python-minimal)
