@@ -1,5 +1,5 @@
 output "public_ip" {
-  value = "${aws_instance.drupal.public_ip}"
+  value = "${aws_instance.wordpress.public_ip}"
 }
 
 output "public_subnet_id" {
@@ -7,17 +7,17 @@ output "public_subnet_id" {
 }
 
 output "db_host" {
-  value = "${aws_db_instance.drupal.endpoint}"
+  value = "${aws_db_instance.wordpress.endpoint}"
 }
 
 output "db_name" {
-  value = "${aws_db_instance.drupal.name}"
+  value = "${aws_db_instance.wordpress.name}"
 }
 
 output "db_user" {
-  value = "${aws_db_instance.drupal.username}"
+  value = "${aws_db_instance.wordpress.username}"
 }
 
 output "db_pass" {
-  value = "${aws_db_instance.drupal.password}"
+  value = "${aws_db_instance.wordpress.password}"
 }
