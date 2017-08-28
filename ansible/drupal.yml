@@ -1,0 +1,57 @@
+---
+- include: install_python.yml
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+    # https://groups.google.com/d/msg/ansible-project/iIcXrvyNysU/Pej62thzLfIJ
+    - name: Check for required variables
+      fail:
+        msg: Variable '{{ item }}' is not defined
+      when: item not in hostvars[inventory_hostname] or hostvars[inventory_hostname][item] == ""
+      with_items:
+        - drupal_db_host
+        - drupal_db_name
+        - drupal_db_user
+        - drupal_db_password
+
+    # working around a permissions issue copying the files
+    - name: Add Ansible user to nginx user group
+      user:
+        name: "{{ ansible_user }}"
+        groups: "{{ nginx_group }}"
+        append: yes
+
+    - name: Install MySQL CLI (for Drush)
+      apt:
+        name: mysql-client
+        update_cache: true
+
+  roles:
+    - geerlingguy.nginx
+    - geerlingguy.php
+    - geerlingguy.php-mysql
+    - geerlingguy.composer
+    - geerlingguy.drush
+    - geerlingguy.drupal
+  tasks:
+
+    # TODO move to geerlingguy.drupal
+
+    - name: Write nginx config
+      template:
+        src: nginx.conf
+        dest: "{{ nginx_vhost_path }}/drupal.conf"
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - validate nginx configuration
+        - reload nginx
+
+    - name: Fix Drupal files/ directory permissions
+      file:
+        path: "{{ drupal_core_path }}/sites/default/files"
+        group: "{{ nginx_group }}"
+        state: directory
