@@ -1,0 +1,41 @@
+---
+- include: install_python.yml
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+    # based on
+    # https://groups.google.com/d/msg/ansible-project/iIcXrvyNysU/Pej62thzLfIJ
+    - name: Check for required variables
+      fail:
+        msg: Variable '{{ item }}' is not defined
+      when: item not in hostvars[inventory_hostname] or hostvars[inventory_hostname][item] == ""
+      with_items:
+        - drupal_db_host
+        - drupal_db_name
+        - drupal_db_user
+        - drupal_db_password
+
+  tasks:
+
+    # https://help.ubuntu.com/lts/serverguide/wordpress.html
+
+    - name: Install Wordpress
+      apt:
+        name:
+          - python-mysqldb
+          - wordpress
+
+    - name: Configure Apache
+      template:
+        src: wordpress.conf
+        dest: /etc/apache2/sites-available/wordpress.conf
+
+    - name: Enable Wordpress in Apache
+      command: a2ensite wordpress
+
+    - name: Restart Apache
+      systemd:
+        name: apache2
+        state: restarted

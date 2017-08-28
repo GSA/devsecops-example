@@ -11,7 +11,7 @@
   "provisioners": [
     {
       "type": "ansible",
-      "playbook_file": "../ansible/drupal.yml",
+      "playbook_file": "../ansible/wordpress.yml",
       "extra_arguments": ["--extra-vars", "drupal_db_host={{user `db_host`}} drupal_db_name={{user `db_name`}} drupal_db_user={{user `db_user`}} drupal_db_password={{user `db_pass`}}"]
     }
   ],
