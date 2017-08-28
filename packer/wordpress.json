@@ -32,6 +32,6 @@
     "instance_type": "t2.micro",
     "subnet_id": "{{user `subnet_id`}}",
     "ssh_username": "ubuntu",
-    "ami_name": "packer-example {{timestamp}}"
+    "ami_name": "wordpress {{timestamp}}"
   }]
 }

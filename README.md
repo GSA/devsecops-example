@@ -37,4 +37,7 @@ TODO
       -var db_user=$(terraform output db_user) \
       -var db_pass=$(terraform output db_pass) \
       ../packer/wordpress.json
+
+    # make sure it's using the latest AMI
+    terraform apply
     ```
