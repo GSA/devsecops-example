@@ -12,10 +12,10 @@
         msg: Variable '{{ item }}' is not defined
       when: item not in hostvars[inventory_hostname] or hostvars[inventory_hostname][item] == ""
       with_items:
-        - wordpress_db_host
-        - wordpress_db_name
-        - wordpress_db_user
-        - wordpress_db_password
+        - db_host
+        - db_name
+        - db_user
+        - db_pass
 
     # https://help.ubuntu.com/lts/serverguide/wordpress.html
 

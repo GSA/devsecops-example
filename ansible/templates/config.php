@@ -1,7 +1,7 @@
 <?php
-define('DB_NAME', '{{ wordpress_db_name }}');
-define('DB_USER', '{{ wordpress_db_user }}');
-define('DB_PASSWORD', '{{ wordpress_db_password }}');
-define('DB_HOST', '{{ wordpress_db_host }}');
+define('DB_NAME', '{{ db_name }}');
+define('DB_USER', '{{ db_user }}');
+define('DB_PASSWORD', '{{ db_pass }}');
+define('DB_HOST', '{{ db_host }}');
 define('WP_CONTENT_DIR', '/usr/share/wordpress/wp-content');
 ?>

@@ -12,7 +12,7 @@
     {
       "type": "ansible",
       "playbook_file": "../ansible/wordpress.yml",
-      "extra_arguments": ["--extra-vars", "wordpress_db_host={{user `db_host`}} wordpress_db_name={{user `db_name`}} wordpress_db_user={{user `db_user`}} wordpress_db_password={{user `db_pass`}}"]
+      "extra_arguments": ["--extra-vars", "db_host={{user `db_host`}} db_name={{user `db_name`}} db_user={{user `db_user`}} db_pass={{user `db_pass`}}"]
     }
   ],
   "builders": [{
