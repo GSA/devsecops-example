@@ -1,0 +1,38 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "db_host": null,
+    "db_name": null,
+    "db_user": null,
+    "db_pass": null,
+    "region": "{{env `AWS_DEFAULT_REGION`}}",
+    "subnet_id": null
+  },
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "../ansible/wordpress.yml",
+      "extra_arguments": ["--extra-vars", "db_host={{user `db_host`}} db_name={{user `db_name`}} db_user={{user `db_user`}} db_pass={{user `db_pass`}}"]
+    }
+  ],
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `region`}}",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "*ubuntu-xenial-16.04-amd64-server-*",
+        "root-device-type": "ebs"
+      },
+      "owners": ["099720109477"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "subnet_id": "{{user `subnet_id`}}",
+    "ssh_username": "ubuntu",
+    "ami_name": "wordpress {{timestamp}}"
+  }]
+}

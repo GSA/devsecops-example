@@ -1,0 +1,48 @@
+---
+- include: install_python.yml
+
+- hosts: all
+  become: true
+  vars:
+    wp_install_dir: /usr/share/wordpress
+    wp_content_dir: "{{ wp_install_dir }}/wp-content"
+  tasks:
+
+    # based on
+    # https://groups.google.com/d/msg/ansible-project/iIcXrvyNysU/Pej62thzLfIJ
+    - name: Check for required variables
+      fail:
+        msg: Variable '{{ item }}' is not defined
+      when: item not in hostvars[inventory_hostname] or hostvars[inventory_hostname][item] == ""
+      with_items:
+        - db_host
+        - db_name
+        - db_user
+        - db_pass
+
+    # https://help.ubuntu.com/lts/serverguide/wordpress.html
+
+    - name: Install WordPress
+      apt:
+        name:
+          - python-mysqldb
+          - wordpress
+
+    - name: Configure WordPress
+      template:
+        src: config.php
+        # https://superuser.com/a/559371/102684
+        dest: /etc/wordpress/config-default.php
+
+    - name: Configure Apache
+      template:
+        src: wordpress.conf
+        dest: /etc/apache2/sites-available/wordpress.conf
+
+    - name: Enable WordPress in Apache
+      command: a2ensite wordpress
+
+    - name: Restart Apache
+      systemd:
+        name: apache2
+        state: restarted

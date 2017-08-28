@@ -1,3 +1,10 @@
+# Packer
+*.pem
+
+# Ansible
+ansible/roles/
+*.retry
+
 ## Terraform ##
 *.tfvars
 # Compiled files

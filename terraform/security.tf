@@ -1,9 +1,9 @@
-resource "aws_security_group" "drupal_ec2" {
-  name = "drupal"
+resource "aws_security_group" "wordpress_ec2" {
+  name = "wordpress"
   description = "rules for production traffic"
   vpc_id = "${module.vpc.vpc_id}"
   tags {
-    Name = "Drupal EC2 rules"
+    Name = "WordPress EC2 rules"
   }
 
   # HTTPS
@@ -41,12 +41,12 @@ resource "aws_security_group" "drupal_ec2" {
   }
 }
 
-resource "aws_security_group" "drupal_db" {
-  name        = "Drupal (DB)"
-  description = "RDS security group for Drupal."
+resource "aws_security_group" "wordpress_db" {
+  name        = "WordPress (DB)"
+  description = "RDS security group for WordPress."
   vpc_id      = "${module.vpc.vpc_id}"
   tags {
-    Name = "Drupal RDS rules"
+    Name = "WordPress RDS rules"
   }
 
   ingress {
