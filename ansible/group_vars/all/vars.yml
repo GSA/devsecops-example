@@ -1,4 +1,9 @@
 ---
+# TODO move to geerlingguy.drupal
+nginx_remove_default_vhost: true
+nginx_user: www-data
+nginx_group: "{{ nginx_user }}"
+
 # https://github.com/geerlingguy/ansible-role-drupal#create-a-new-project-using-drupal-project-composer
 drupal_build_makefile: false
 drupal_build_composer: false
@@ -7,8 +12,4 @@ drupal_composer_project_package: "drupal-composer/drupal-project:8.x-dev"
 drupal_composer_project_options: "--prefer-dist --stability dev --no-interaction"
 
 # https://github.com/geerlingguy/ansible-role-drupal#required-drupal-site-settings
-# corresponds to nginx_user
-drupal_core_owner: www-data
-
-# TODO move to geerlingguy.drupal
-nginx_remove_default_vhost: true
+drupal_core_owner: "{{ nginx_user }}"

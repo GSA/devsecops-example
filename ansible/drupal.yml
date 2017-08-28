@@ -16,6 +16,13 @@
         - drupal_db_user
         - drupal_db_password
 
+    # working around a permissions issue copying the files
+    - name: Add Ansible user to nginx user group
+      user:
+        name: "{{ ansible_user }}"
+        groups: "{{ nginx_group }}"
+        append: yes
+
     - name: Install MySQL CLI (for Drush)
       apt:
         name: mysql-client
@@ -46,5 +53,5 @@
     - name: Fix Drupal files/ directory permissions
       file:
         path: "{{ drupal_core_path }}/sites/default/files"
-        group: www-data
+        group: "{{ nginx_group }}"
         state: directory
