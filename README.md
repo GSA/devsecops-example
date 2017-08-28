@@ -31,14 +31,30 @@ The example application being deployed is WordPress. WordPress, by default, save
     ```sh
     cd terraform
     cp terraform.tfvars.example terraform.tfvars
-    # fill out terraform.tfvars
     ```
 
+1. Fill out [`terraform.tfvars`](terraform/terraform.tfvars.example).
 1. Set up environment using Terraform.
 
     ```sh
     export AWS_DEFAULT_REGION=us-east-1
     terraform init
+    ```
+
+1. Run the [deployment](#deployment) steps below.
+1. Visit the setup page.
+
+    ```sh
+    open http://$(terraform output public_ip)/blog/wp-admin/install.php
+    ```
+
+## Deployment
+
+For initial or subsequent deployment:
+
+1. Set up environment using Terraform.
+
+    ```sh
     terraform apply
     ```
 
@@ -58,10 +74,4 @@ The example application being deployed is WordPress. WordPress, by default, save
 
     ```sh
     terraform apply
-    ```
-
-1. Visit the setup page.
-
-    ```sh
-    open http://$(terraform output public_ip)/blog/wp-admin/install.php
     ```
