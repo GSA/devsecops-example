@@ -28,6 +28,12 @@
           - python-mysqldb
           - wordpress
 
+    - name: Configure WordPress
+      template:
+        src: config.php
+        # https://superuser.com/a/559371/102684
+        dest: /etc/wordpress/config-default.php
+
     - name: Configure Apache
       template:
         src: wordpress.conf
