@@ -13,3 +13,8 @@ variable "database_subnet_cidrs" {
 variable "ip_whitelist" {
   default = "0.0.0.0/0"
 }
+
+variable "db_pass" {
+  description = "The database password"
+  type = "string"
+}

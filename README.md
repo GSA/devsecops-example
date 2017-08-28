@@ -26,11 +26,18 @@ The example application being deployed is WordPress. WordPress, by default, save
     aws s3api put-bucket-versioning --bucket devsecops-example --versioning-configuration Status=Enabled
     ```
 
+1. Create the Terraform variables file.
+
+    ```sh
+    cd terraform
+    cp terraform.tfvars.example terraform.tfvars
+    # fill out terraform.tfvars
+    ```
+
 1. Set up environment using Terraform.
 
     ```sh
     export AWS_DEFAULT_REGION=us-east-1
-    cd terraform
     terraform init
     terraform apply
     ```
