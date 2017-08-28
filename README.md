@@ -10,6 +10,13 @@ The example application being deployed is WordPress. WordPress, by default, save
 * [`packer.json`](packer.json) - [Packer](https://www.packer.io/) template for creating an [Amazon Machine Image (AMI)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
 * [`ansible/`](ansible/) - [Ansible](https://docs.ansible.com/ansible/latest/index.html) code for installing WordPress and doing other configuration within the [EC2](https://aws.amazon.com/ec2/) instance, which Packer turns into an AMI
 
+## Important concepts
+
+* Give (internal) custom domains to services, rather than using the hostnames/IPs provided by AWS by default.
+    * In this repository, a custom DNS record is added in a [Private Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html) in Route 53, pointing to the database. See [`terraform/dns.tf`](terraform/dns.tf).
+    * This helps with [service discovery](https://en.wikipedia.org/wiki/Service_discovery), because references to services (the database, in this case) can remain constant while the database can be recreated with a new IP, load-balanced, etc.
+    * See [this article](https://www.infoq.com/articles/rest-discovery-dns) for more information on this approach.
+
 ## Setup
 
 1. Set up the AWS CLI.

@@ -7,7 +7,7 @@ output "public_subnet_id" {
 }
 
 output "db_host" {
-  value = "${aws_db_instance.wordpress.endpoint}"
+  value = "${aws_route53_record.db.fqdn}"
 }
 
 output "db_name" {
