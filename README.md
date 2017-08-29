@@ -59,6 +59,7 @@ Give (internal) custom domains to services, rather than using the hostnames/IPs 
     aws s3api create-bucket --bucket devsecops-example
     aws s3api put-bucket-versioning --bucket devsecops-example --versioning-configuration Status=Enabled
     ```
+    NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique per-region. If you get an error that the bucket name is not available, then your choice was not unique.
 
 1. Create the Terraform variables file.
 
