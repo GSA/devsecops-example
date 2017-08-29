@@ -15,7 +15,7 @@ module "vpc" {
   enable_dns_hostnames = "true"
   enable_dns_support = "true"
 
-  azs = ["${data.aws_region.current.name}a", "${data.aws_region.current.name}b"]
+  azs = ["${data.aws_region.current.name}d", "${data.aws_region.current.name}f"]
 
   tags {
     "Terraform" = "true"
