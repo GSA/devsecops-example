@@ -3,7 +3,7 @@ output "ssh_user" {
 }
 
 output "public_ip" {
-  value = "${aws_instance.wordpress.public_ip}"
+  value = "${aws_eip.public.public_ip}"
 }
 
 output "public_subnet_id" {
@@ -27,5 +27,5 @@ output "db_pass" {
 }
 
 output "url" {
-  value = "http://${aws_instance.wordpress.public_ip}/blog/"
+  value = "http://${aws_eip.public.public_ip}/blog/"
 }

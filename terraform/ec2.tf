@@ -38,6 +38,11 @@ resource "aws_instance" "wordpress" {
   }
 }
 
+resource "aws_eip" "public" {
+  instance = "${aws_instance.wordpress.id}"
+  vpc = true
+}
+
 resource "aws_ebs_volume" "wp_content" {
   # TODO deletion protection
   availability_zone = "${data.aws_subnet.public.availability_zone}"
@@ -55,7 +60,7 @@ resource "aws_volume_attachment" "wp_content" {
     script = "files/attach-data-volume.sh"
     connection {
       user = "${var.ssh_user}"
-      host = "${aws_instance.wordpress.public_ip}"
+      host = "${aws_eip.public.public_ip}"
     }
   }
 }

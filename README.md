@@ -111,6 +111,8 @@ For initial or subsequent deployment:
     terraform apply
     ```
 
+Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
+
 ## Troubleshooting
 
 To SSH into the running instance:
