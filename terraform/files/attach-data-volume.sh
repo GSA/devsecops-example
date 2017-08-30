@@ -9,8 +9,7 @@ set -x
 # note the name doesn't match the device_name in Terraform
 DEVICE=/dev/xvdf
 MOUNT=/usr/share/wordpress/wp-content-mount
-# TODO pass in
-OWNER=root
+OWNER=www-data
 DEST=/usr/share/wordpress/wp-content
 
 devpath=$(readlink -f $DEVICE)
@@ -40,3 +39,4 @@ fi
 
 sudo rm -rf $DEST
 sudo ln -s $MOUNT $DEST
+sudo chown -h $OWNER:$OWNER $DEST
