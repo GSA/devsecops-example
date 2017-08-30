@@ -10,17 +10,17 @@ set -x
 DEVICE=/dev/xvdf
 MOUNT=/usr/share/wordpress/wp-content-mount
 # TODO pass in
-OWNER=www-data
+OWNER=root
 DEST=/usr/share/wordpress/wp-content
 
 devpath=$(readlink -f $DEVICE)
 
-sudo file -s $devpath | grep -q ext4
-if [[ 1 == $? && -b $devpath ]]; then
+if [[ $(sudo file -s $devpath) != *ext4* && -b $devpath ]]; then
+  # Filesystem has not been created. Create it!
   sudo mkfs -t ext4 $devpath
 fi
 
-sudo mkdir $MOUNT
+sudo mkdir -p $MOUNT
 sudo chown $OWNER:$OWNER $MOUNT
 sudo chmod 0775 $MOUNT
 
@@ -31,10 +31,12 @@ sudo mount $MOUNT
 echo deadline | sudo tee /sys/block/$(basename "$devpath")/queue/scheduler
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
 
-# if themes directory doesn't exist
+# if themes directory doesn't exist...
 if [ ! -d "$MOUNT/themes" ]; then
-  # volume doesn't contain initial data - copy existing content in
-  cp -R $DEST $MOUNT
+  # ...volume doesn't contain initial data. Copy existing content in.
+  # https://askubuntu.com/a/86891/501568
+  sudo cp -a $DEST/. $MOUNT/
 fi
 
-ln -s $MOUNT $DEST
+sudo rm -rf $DEST
+sudo ln -s $MOUNT $DEST
