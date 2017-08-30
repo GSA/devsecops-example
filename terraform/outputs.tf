@@ -21,3 +21,7 @@ output "db_user" {
 output "db_pass" {
   value = "${aws_db_instance.wordpress.password}"
 }
+
+output "url" {
+  value = "http://${aws_instance.wordpress.public_ip}/blog/"
+}

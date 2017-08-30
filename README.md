@@ -80,7 +80,7 @@ Give (internal) custom domains to services, rather than using the hostnames/IPs 
 1. Visit the setup page.
 
     ```sh
-    open http://$(terraform output public_ip)/blog/wp-admin/install.php
+    open $(terraform output url)wp-admin/install.php
     ```
 
 ## Deployment
