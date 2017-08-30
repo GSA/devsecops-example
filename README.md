@@ -110,3 +110,11 @@ For initial or subsequent deployment:
     ```sh
     terraform apply
     ```
+
+## Troubleshooting
+
+To SSH into the running instance:
+
+```sh
+ssh $(terraform output ssh_user)@$(terraform output public_ip)
+```

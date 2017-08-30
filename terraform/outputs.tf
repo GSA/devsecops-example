@@ -1,3 +1,7 @@
+output "ssh_user" {
+  value = "${var.ssh_user}"
+}
+
 output "public_ip" {
   value = "${aws_instance.wordpress.public_ip}"
 }
