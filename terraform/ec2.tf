@@ -25,7 +25,11 @@ resource "aws_instance" "wordpress" {
     Name = "WordPress"
   }
 
-  provisioner "local-exec" {
-    command = "echo Successfully connected"
+  provisioner "remote-exec" {
+    inline = ["echo Successfully connected"]
+
+    connection {
+      user = "${var.ssh_user}"
+    }
   }
 }

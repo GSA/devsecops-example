@@ -22,3 +22,7 @@ variable "db_pass" {
   description = "The database password"
   type = "string"
 }
+
+variable "ssh_user" {
+  default = "ubuntu"
+}
