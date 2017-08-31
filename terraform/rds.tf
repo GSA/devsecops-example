@@ -4,6 +4,7 @@ resource "aws_db_instance" "wordpress" {
   engine = "mysql"
   engine_version = "5.7.17"
   instance_class = "db.t2.micro"
+  copy_tags_to_snapshot = true
   # just for development
   skip_final_snapshot = true
 
@@ -13,4 +14,8 @@ resource "aws_db_instance" "wordpress" {
 
   db_subnet_group_name = "${module.vpc.database_subnet_group}"
   vpc_security_group_ids = ["${aws_security_group.wordpress_db.id}"]
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }

@@ -26,6 +26,12 @@ All configuration is code, and [all setup steps are documented](#setup). New env
 
 The code follows the [Don't Repeat Yourself (DRY)](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle. Values that need to be shared are passed around as variables, rather than being hard-coded in multiple places. This ensures configuration stays in sync.
 
+## Immutable deployment
+
+Once deployed, immutable resources should not be modified. The goal is to have as much of the infrastructure be immutable as possible, with regular backups of the mutable parts. EBS volumes where state is stored (like `wp-content/` for WordPress) and database are common mutable resources, EC2 instances and their root volumes should not be.
+
+For mutable resources, enable [deletion protection](https://www.terraform.io/docs/configuration/resources.html#prevent_destroy).
+
 ### Configuration travels "down"
 
 _Related to [DRY](#dry)._

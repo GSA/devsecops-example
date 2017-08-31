@@ -1,9 +1,12 @@
 resource "aws_ebs_volume" "wp_content" {
-  # TODO deletion protection
   availability_zone = "${data.aws_subnet.public.availability_zone}"
   type = "gp2"
   size = 10
   encrypted = true
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_volume_attachment" "wp_content" {
