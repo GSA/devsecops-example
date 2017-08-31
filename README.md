@@ -44,6 +44,10 @@ WordPress has no idea that it's running on AWS, Ansible doesn't know it's runnin
 
 Give (internal) custom domains to services, rather than using the hostnames/IPs provided by AWS by default. In this repository, a custom DNS record is added in a [Private Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html) in Route 53, pointing to the database - see [`terraform/dns.tf`](terraform/dns.tf). This helps with [service discovery](https://en.wikipedia.org/wiki/Service_discovery), because references to services (the database, in this case) can remain constant while the database can be recreated with a new IP, load-balanced, etc. See [this article](https://www.infoq.com/articles/rest-discovery-dns) for more information on this approach.
 
+### Disk
+
+* [Encryption](https://www.terraform.io/docs/providers/aws/r/ebs_volume.html#encrypted) is enabled
+
 ## Setup
 
 1. Set up the AWS CLI.
