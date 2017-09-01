@@ -4,6 +4,8 @@
 - hosts: all
   become: true
   vars:
+    apache_user: www-data
+    apache_group: "{{ apache_user }}"
     wp_install_dir: /usr/share/wordpress
     wp_content_dir: "{{ wp_install_dir }}/wp-content"
   tasks:
@@ -33,6 +35,17 @@
         src: config.php
         # https://superuser.com/a/559371/102684
         dest: /etc/wordpress/config-default.php
+        owner: "{{ apache_user }}"
+        group: "{{ apache_group }}"
+
+    # https://help.ubuntu.com/community/WordPress#Install_WordPress
+    - name: Fix permissions on WordPress directory
+      file:
+        path: "{{ wp_install_dir }}"
+        owner: "{{ apache_user }}"
+        group: "{{ apache_group }}"
+        state: directory
+        recurse: true
 
     - name: Configure Apache
       template:

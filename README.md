@@ -26,6 +26,12 @@ All configuration is code, and [all setup steps are documented](#setup). New env
 
 The code follows the [Don't Repeat Yourself (DRY)](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle. Values that need to be shared are passed around as variables, rather than being hard-coded in multiple places. This ensures configuration stays in sync.
 
+## Immutable deployment
+
+Once deployed, immutable resources should not be modified. The goal is to have as much of the infrastructure be immutable as possible, with regular backups of the mutable parts. EBS volumes where state is stored (like `wp-content/` for WordPress) and database are common mutable resources, EC2 instances and their root volumes should not be.
+
+For mutable resources, enable [deletion protection](https://www.terraform.io/docs/configuration/resources.html#prevent_destroy).
+
 ### Configuration travels "down"
 
 _Related to [DRY](#dry)._
@@ -43,6 +49,10 @@ WordPress has no idea that it's running on AWS, Ansible doesn't know it's runnin
 ### Internal DNS
 
 Give (internal) custom domains to services, rather than using the hostnames/IPs provided by AWS by default. In this repository, a custom DNS record is added in a [Private Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html) in Route 53, pointing to the database - see [`terraform/dns.tf`](terraform/dns.tf). This helps with [service discovery](https://en.wikipedia.org/wiki/Service_discovery), because references to services (the database, in this case) can remain constant while the database can be recreated with a new IP, load-balanced, etc. See [this article](https://www.infoq.com/articles/rest-discovery-dns) for more information on this approach.
+
+### Disk
+
+* [Encryption](https://www.terraform.io/docs/providers/aws/r/ebs_volume.html#encrypted) is enabled
 
 ## Setup
 
@@ -110,6 +120,8 @@ For initial or subsequent deployment:
     ```sh
     terraform apply
     ```
+
+Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
 
 ## Troubleshooting
 
