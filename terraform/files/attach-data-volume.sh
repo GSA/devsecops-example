@@ -11,6 +11,8 @@ DEVICE=/dev/xvdf
 OWNER=www-data
 DEST=/usr/share/wordpress/wp-content
 OLDDEST=$DEST-old
+# if this directory is present, assume volume contains initial data
+CHECK_DIR=$DEST/themes
 
 devpath=$(readlink -f $DEVICE)
 
@@ -22,7 +24,10 @@ fi
 sudo mv $DEST $OLDDEST
 sudo mkdir -p $DEST
 
-echo "$devpath $DEST ext4 defaults,nofail,noatime,nodiratime,barrier=0,data=writeback 0 2" | sudo tee -a /etc/fstab > /dev/null
+# add to fstab if not present
+if ! egrep "^${devpath}" /etc/fstab; then
+  echo "$devpath $DEST ext4 defaults,nofail,noatime,nodiratime,barrier=0,data=writeback 0 2" | sudo tee -a /etc/fstab > /dev/null
+fi
 sudo mount $DEST
 
 sudo chown $OWNER:$OWNER $DEST
@@ -32,9 +37,8 @@ sudo chmod 0775 $DEST
 echo deadline | sudo tee /sys/block/$(basename "$devpath")/queue/scheduler
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
 
-# if themes directory doesn't exist...
-if [ ! -d "$DEST/themes" ]; then
-  # ...volume doesn't contain initial data. Copy initial content in.
+if [ ! -d "$CHECK_DIR" ]; then
+  # Copy initial content in.
   # https://askubuntu.com/a/86891/501568
   sudo cp -a $OLDDEST/. $DEST/
 fi
