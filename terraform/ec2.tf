@@ -15,7 +15,7 @@ data "aws_ami" "wordpress" {
 }
 
 data "aws_subnet" "public" {
-  id = "${module.vpc.public_subnets[0]}"
+  id = "${module.network.public_subnets[0]}"
 }
 
 resource "aws_instance" "wordpress" {
