@@ -1,7 +1,7 @@
 resource "aws_security_group" "wordpress_ec2" {
   name = "wordpress"
   description = "rules for production traffic"
-  vpc_id = "${module.vpc.vpc_id}"
+  vpc_id = "${module.network.vpc_id}"
   tags {
     Name = "WordPress EC2 rules"
   }
@@ -44,7 +44,7 @@ resource "aws_security_group" "wordpress_ec2" {
 resource "aws_security_group" "wordpress_db" {
   name        = "WordPress (DB)"
   description = "RDS security group for WordPress."
-  vpc_id      = "${module.vpc.vpc_id}"
+  vpc_id      = "${module.network.vpc_id}"
   tags {
     Name = "WordPress RDS rules"
   }
