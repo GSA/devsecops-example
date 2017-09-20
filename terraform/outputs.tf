@@ -7,7 +7,7 @@ output "public_ip" {
 }
 
 output "public_subnet_id" {
-  value = "${module.network.public_subnets[0]}"
+  value = "${module.network.mgmt_public_subnet_ids[0]}"
 }
 
 output "db_host" {
