@@ -26,6 +26,10 @@ All configuration is code, and [all setup steps are documented](#setup). New env
 
 The code follows the [Don't Repeat Yourself (DRY)](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle. Values that need to be shared are passed around as variables, rather than being hard-coded in multiple places. This ensures configuration stays in sync.
 
+## Convention over configuration
+
+See [the explanation on Wikipedia](https://en.wikipedia.org/wiki/Convention_over_configuration). For example, sensible defaults are provided for as many variables as possible (in Terraform and Ansible, in particular), so minimal configuration is required to get up and running. At the same time, the various components are built as modularly and flexibly as possible, so that they can cover as many use cases as possible.
+
 ## Immutable deployment
 
 Once deployed, immutable resources should not be modified. The goal is to have as much of the infrastructure be immutable as possible, with regular backups of the mutable parts. EBS volumes where state is stored (like `wp-content/` for WordPress) and database are common mutable resources, EC2 instances and their root volumes should not be.
