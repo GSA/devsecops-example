@@ -3,8 +3,16 @@ jobs:
   build:
     docker:
       - image: hashicorp/terraform
+        environment:
+          AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
+      - run:
+          name: Create fake SSH public key
+          command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
+      - run:
+          name: Create Terraform variables file
+          command: cd terraform && cp terraform.tfvars.example terraform.tfvars
       - run:
           name: Set up Terraform
           command: cd terraform && terraform init -backend=false
