@@ -1,4 +1,4 @@
-# DevSecOps example
+# DevSecOps example [![CircleCI](https://circleci.com/gh/GSA/devsecops-example.svg?style=svg)](https://circleci.com/gh/GSA/devsecops-example)
 
 This repository is an example of best-practice deployment for the [General Services Administration](https://www.gsa.gov/). More specifically, it demonstrates how to do configuration and deployment for an application that writes to disk. See [the DevSecOps Guide](https://tech.gsa.gov/guides/dev_sec_ops_guide/) for more information.
 
