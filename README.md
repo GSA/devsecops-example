@@ -16,48 +16,6 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 * [`packer.json`](packer.json) - [Packer](https://www.packer.io/) template for creating an [Amazon Machine Image (AMI)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
 * [`ansible/`](ansible/) - [Ansible](https://docs.ansible.com/ansible/latest/index.html) code for installing WordPress and doing other configuration within the [EC2](https://aws.amazon.com/ec2/) instance, which Packer turns into an AMI
 
-## Important concepts
-
-### Configuration as code
-
-All configuration is code, and [all setup steps are documented](#setup). New environment(s) can be created from scratch quickly and reliably.
-
-### DRY
-
-The code follows the [Don't Repeat Yourself (DRY)](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle. Values that need to be shared are passed around as variables, rather than being hard-coded in multiple places. This ensures configuration stays in sync.
-
-## Convention over configuration
-
-See [the explanation on Wikipedia](https://en.wikipedia.org/wiki/Convention_over_configuration). For example, sensible defaults are provided for as many variables as possible (in Terraform and Ansible, in particular), so minimal configuration is required to get up and running. At the same time, the various components are built as modularly and flexibly as possible, so that they can cover as many use cases as possible.
-
-## Immutable deployment
-
-Once deployed, immutable resources should not be modified. The goal is to have as much of the infrastructure be immutable as possible, with regular backups of the mutable parts. EBS volumes where state is stored (like `wp-content/` for WordPress) and database are common mutable resources, EC2 instances and their root volumes should not be.
-
-For mutable resources, enable [deletion protection](https://www.terraform.io/docs/configuration/resources.html#prevent_destroy).
-
-### Configuration travels "down"
-
-_Related to [DRY](#dry)._
-
-For example, database connection information is passed in the following sequence:
-
-1. [Terraform `output`s](terraform/outputs.tf)
-1. `var`s passed to the `packer build` command [below](#deployment)
-1. [Packer template](packer.json) variables
-1. [Ansible playbook](ansible/wordpress.yml) variables
-1. [WordPress connection information](ansible/templates/config.php)
-
-WordPress has no idea that it's running on AWS, Ansible doesn't know it's running on an EC2 instance, etc. All of the configuration outside of each piece's purview comes in through variables. This keeps pieces like [the Packer template](packer.json) and [the Ansible playbook](ansible/wordpress.yml) as portable as possible.
-
-### Internal DNS
-
-Give (internal) custom domains to services, rather than using the hostnames/IPs provided by AWS by default. In this repository, a custom DNS record is added in a [Private Hosted Zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html) in Route 53, pointing to the database - see [`terraform/dns.tf`](terraform/dns.tf). This helps with [service discovery](https://en.wikipedia.org/wiki/Service_discovery), because references to services (the database, in this case) can remain constant while the database can be recreated with a new IP, load-balanced, etc. See [this article](https://www.infoq.com/articles/rest-discovery-dns) for more information on this approach.
-
-### Disk
-
-* [Encryption](https://www.terraform.io/docs/providers/aws/r/ebs_volume.html#encrypted) is enabled
-
 ## Setup
 
 1. Set up the AWS CLI.
