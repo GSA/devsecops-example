@@ -1,5 +1,5 @@
 module "network" {
-  source = "github.com/GSA/DevSecOps-Infrastructure/terraform"
+  source = "git::https://github.com/GSA/DevSecOps.git?ref=21dcc28//terraform"
 
   aws_az1 = "${data.aws_region.current.name}d"
   aws_az2 = "${data.aws_region.current.name}f"
@@ -16,6 +16,5 @@ module "network" {
   mgmt_nat_gateway = "true"
   mgmt_flow_log_group_name = "devsecops_example_flow_log"
   devsecops_iam_log_role_name = "devsecops_example_flow_log"
-  aws_region = "${data.aws_region.current.name}"
   mgmt_vpc_cidr = "${var.vpc_cidr}"
 }
