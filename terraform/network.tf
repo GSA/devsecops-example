@@ -17,9 +17,6 @@ module "network" {
 }
 
 module "flow_logs" {
-  source = "git::https://github.com/GSA/DevSecOps.git?ref=fb535d3//terraform/modules/vpc_flow_log"
-
+  source = "github.com/GSA/terraform-vpc-flow-log"
   vpc_id = "${module.network.vpc_id}"
-  // not actually the name, but required by this module
-  vpc_name = "devsecops-example"
 }
