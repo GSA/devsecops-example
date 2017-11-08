@@ -1,7 +1,7 @@
 resource "aws_security_group" "wordpress_ec2" {
   name = "wordpress"
   description = "rules for production traffic"
-  vpc_id = "${module.network.mgmt_vpc_id}"
+  vpc_id = "${module.network.vpc_id}"
   tags {
     Name = "WordPress EC2 rules"
   }
@@ -44,7 +44,7 @@ resource "aws_security_group" "wordpress_ec2" {
 resource "aws_security_group" "wordpress_db" {
   name        = "WordPress (DB)"
   description = "RDS security group for WordPress."
-  vpc_id      = "${module.network.mgmt_vpc_id}"
+  vpc_id      = "${module.network.vpc_id}"
   tags {
     Name = "WordPress RDS rules"
   }
@@ -53,13 +53,13 @@ resource "aws_security_group" "wordpress_db" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["${module.network.mgmt_vpc_cidr_block}"]
+    cidr_blocks = ["${var.vpc_cidr}"]
   }
 
   egress {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["${module.network.mgmt_vpc_cidr_block}"]
+    cidr_blocks = ["${var.vpc_cidr}"]
   }
 }

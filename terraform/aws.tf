@@ -1,5 +1,6 @@
 provider "aws" {
-  version = "~> 0.1"
+  // https://github.com/terraform-providers/terraform-provider-aws/issues/1625
+  version = "~> 1.0"
 }
 
 terraform {

@@ -1,16 +1,25 @@
 module "network" {
-  source = "git::https://github.com/GSA/DevSecOps.git?ref=21dcc28//terraform"
+  source = "terraform-aws-modules/vpc/aws"
 
-  aws_az1 = "${data.aws_region.current.name}d"
-  aws_az2 = "${data.aws_region.current.name}f"
+  azs = [
+    "${data.aws_region.current.name}d",
+    "${data.aws_region.current.name}f"
+  ]
 
-  mgmt_vpc_name = "devsecops-example"
-  private_mgmt_zone_name = "${var.private_zone_name}"
+  name = "devsecops-example"
 
-  devsecops_flow_log_policy = "devsecops_example_flow_log"
-  mgmt_dns_hostnames = "true"
-  mgmt_dns_support = "true"
-  mgmt_nat_gateway = "true"
-  mgmt_flow_log_group_name = "devsecops_example_flow_log"
-  devsecops_iam_log_role_name = "devsecops_example_flow_log"
+  enable_dns_hostnames = true
+  enable_dns_support = true
+  database_subnets = ["${var.database_subnet_cidrs}"]
+  public_subnets = ["${var.public_subnet_cidr}"]
+  enable_nat_gateway = true
+  cidr = "${var.vpc_cidr}"
+}
+
+module "flow_logs" {
+  source = "git::https://github.com/GSA/DevSecOps.git?ref=fb535d3//terraform/modules/vpc_flow_log"
+
+  vpc_id = "${module.network.vpc_id}"
+  // not actually the name, but required by this module
+  vpc_name = "devsecops-example"
 }
