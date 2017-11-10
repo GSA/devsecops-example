@@ -9,3 +9,7 @@ terraform {
     key = "terraform/terraform.tfstate"
   }
 }
+
+data "aws_region" "current" {
+  current = true
+}
