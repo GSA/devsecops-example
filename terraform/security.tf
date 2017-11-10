@@ -53,13 +53,13 @@ resource "aws_security_group" "wordpress_db" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["${var.vpc_cidr}"]
+    cidr_blocks = ["${module.network.mgmt_vpc_cidr_block}"]
   }
 
   egress {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["${var.vpc_cidr}"]
+    cidr_blocks = ["${module.network.mgmt_vpc_cidr_block}"]
   }
 }
