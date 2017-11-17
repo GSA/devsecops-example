@@ -12,7 +12,7 @@ resource "aws_db_instance" "wordpress" {
   username = "wordpressuser"
   password = "${var.db_pass}"
 
-  db_subnet_group_name = "${module.network.mgmt_database_subnet_ids[0]}"
+  db_subnet_group_name = "${module.network.database_subnet_group}"
   vpc_security_group_ids = ["${aws_security_group.wordpress_db.id}"]
 
   lifecycle {
