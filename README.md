@@ -12,7 +12,7 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 
 ## What's here
 
-* [`terraform/`](terraform/) - [Terraform](https://www.terraform.io/) code for setting up the infrastructure at the [Amazon Web Services (AWS)](https://aws.amazon.com/) level
+* [`terraform/env/`](terraform/env/) - [Terraform](https://www.terraform.io/) code for setting up the infrastructure at the [Amazon Web Services (AWS)](https://aws.amazon.com/) level
 * [`packer.json`](packer.json) - [Packer](https://www.packer.io/) template for creating an [Amazon Machine Image (AMI)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
 * [`ansible/`](ansible/) - [Ansible](https://docs.ansible.com/ansible/latest/index.html) code for installing WordPress and doing other configuration within the [EC2](https://aws.amazon.com/ec2/) instance, which Packer turns into an AMI
 
@@ -36,7 +36,7 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 1. Create the Terraform variables file.
 
     ```sh
-    cd terraform
+    cd terraform/env
     cp terraform.tfvars.example terraform.tfvars
     ```
 

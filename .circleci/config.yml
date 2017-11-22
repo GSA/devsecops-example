@@ -12,10 +12,10 @@ jobs:
           command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
       - run:
           name: Create Terraform variables file
-          command: cd terraform && cp terraform.tfvars.example terraform.tfvars
+          command: cd terraform/env && cp terraform.tfvars.example terraform.tfvars
       - run:
           name: Set up Terraform
-          command: cd terraform && terraform init -backend=false
+          command: cd terraform/env && terraform init -backend=false
       - run:
           name: Validate Terraform
-          command: cd terraform && terraform validate
+          command: cd terraform/env && terraform validate
