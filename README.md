@@ -12,7 +12,7 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 
 ## What's here
 
-* [`terraform/env/`](terraform/env/) - [Terraform](https://www.terraform.io/) code for setting up the infrastructure at the [Amazon Web Services (AWS)](https://aws.amazon.com/) level
+* [`terraform/`](terraform/env/) - [Terraform](https://www.terraform.io/) code for setting up the infrastructure at the [Amazon Web Services (AWS)](https://aws.amazon.com/) level, for a management account ([`mgmt/`](terraform/mgmt/)) and application environment(s) ([`env/`](terraform/env/))
 * [`packer.json`](packer.json) - [Packer](https://www.packer.io/) template for creating an [Amazon Machine Image (AMI)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
 * [`ansible/`](ansible/) - [Ansible](https://docs.ansible.com/ansible/latest/index.html) code for installing WordPress and doing other configuration within the [EC2](https://aws.amazon.com/ec2/) instance, which Packer turns into an AMI
 
@@ -25,6 +25,28 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     * [Ansible](https://docs.ansible.com/ansible/latest/intro_installation.html)
     * [Packer](https://www.packer.io/)
     * [Terraform](https://www.terraform.io/)
+
+### Management environment
+
+1. Set up the Terraform backend.
+
+    ```sh
+    aws s3api create-bucket --bucket devsecops-example-mgmt
+    aws s3api put-bucket-versioning --bucket devsecops-example-mgmt --versioning-configuration Status=Enabled
+    ```
+    NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique per-region. If you get an error that the bucket name is not available, then your choice was not unique.
+
+1. Set up environment using Terraform.
+
+    ```sh
+    cd terraform/mgmt
+    export AWS_DEFAULT_REGION=us-east-1
+    terraform init
+    terraform apply
+    ```
+
+### Application environment
+
 1. Set up the Terraform backend.
 
     ```sh
