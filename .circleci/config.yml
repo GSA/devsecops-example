@@ -10,12 +10,20 @@ jobs:
       - run:
           name: Create fake SSH public key
           command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
+
       - run:
-          name: Create Terraform variables file
+          name: mgmt - Set up Terraform
+          command: cd terraform/mgmt && terraform init -backend=false
+      - run:
+          name: mgmt - Validate Terraform
+          command: cd terraform/mgmt && terraform validate
+
+      - run:
+          name: env - Create Terraform variables file
           command: cd terraform/env && cp terraform.tfvars.example terraform.tfvars
       - run:
-          name: Set up Terraform
+          name: env - Set up Terraform
           command: cd terraform/env && terraform init -backend=false
       - run:
-          name: Validate Terraform
+          name: env - Validate Terraform
           command: cd terraform/env && terraform validate
