@@ -1,6 +1,7 @@
 module "network" {
   source = "terraform-aws-modules/vpc/aws"
 
+  # these are somewhat arbitrary - they were faster to provision resources in than `us-east-1a` and `us-east-1b`
   azs = [
     "${data.aws_region.current.name}d",
     "${data.aws_region.current.name}f"
