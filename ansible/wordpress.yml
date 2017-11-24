@@ -59,3 +59,9 @@
       systemd:
         name: apache2
         state: restarted
+
+    - name: Ensure WordPress is reachable
+      uri:
+        url: http://127.0.0.1/blog/
+        # if WordPress hasn't been "installed", it will redirect to the install wizard
+        status_codes: 200,302
