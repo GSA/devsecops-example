@@ -3,5 +3,5 @@ output "public_subnet_id" {
 }
 
 output "jenkins_host" {
-  value = "${module.jenkins_instances.public_ip}"
+  value = "${aws_eip.jenkins.public_ip}"
 }

@@ -28,3 +28,8 @@ module "jenkins_instances" {
   subnet_id = "${module.network.public_subnets[0]}"
   vpc_security_group_ids = ["${module.jenkins_networking.sg_id}"]
 }
+
+resource "aws_eip" "jenkins" {
+  instance = "${module.jenkins_instances.instance_id}"
+  vpc = true
+}

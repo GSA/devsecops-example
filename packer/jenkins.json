@@ -2,6 +2,7 @@
   "variables": {
     "aws_access_key": "",
     "aws_secret_key": "",
+    "jenkins_host": null,
     "region": "{{env `AWS_DEFAULT_REGION`}}",
     "subnet_id": null
   },
@@ -9,7 +10,8 @@
     {
       "type": "ansible",
       "playbook_file": "../../ansible/jenkins.yml",
-      "groups": ["jenkins"]
+      "groups": ["jenkins"],
+      "extra_arguments": ["--extra-vars", "jenkins_external_hostname={{user `jenkins_host`}}"]
     }
   ],
   "builders": [{
