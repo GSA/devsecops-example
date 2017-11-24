@@ -8,6 +8,8 @@
     apache_group: "{{ apache_user }}"
     wp_install_dir: /usr/share/wordpress
     wp_content_dir: "{{ wp_install_dir }}/wp-content"
+  roles:
+    - ansible-os-ubuntu-16
   tasks:
 
     # based on
