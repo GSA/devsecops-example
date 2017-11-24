@@ -96,7 +96,7 @@ For initial or subsequent deployment:
       -var db_name=$(terraform output db_name) \
       -var db_user=$(terraform output db_user) \
       -var db_pass=$(terraform output db_pass) \
-      ../packer.json
+      ../../packer.json
     ```
 
 1. Deploy the latest AMI.
