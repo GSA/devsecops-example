@@ -1,6 +1,5 @@
 ---
-- hosts: all
-  remote_user: ec2-user
+- hosts: jenkins
   become: true
   roles:
     - gsa.jenkins
