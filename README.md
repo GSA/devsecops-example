@@ -25,6 +25,11 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     * [Ansible](https://docs.ansible.com/ansible/latest/intro_installation.html)
     * [Packer](https://www.packer.io/)
     * [Terraform](https://www.terraform.io/)
+1. Install Ansible dependencies.
+
+    ```sh
+    ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
+    ```
 
 ### Management environment
 
@@ -43,6 +48,12 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     export AWS_DEFAULT_REGION=us-east-1
     terraform init
     terraform apply
+    ```
+
+1. Deploy Jenkins.
+
+    ```sh
+    ansible-playbook -i "$(terraform output jenkins_host)," ../../ansible/jenkins.yml
     ```
 
 ### Application environment
