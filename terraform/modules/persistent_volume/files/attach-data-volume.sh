@@ -6,13 +6,7 @@
 set -e
 set -x
 
-# note the name doesn't match the device_name in Terraform
-DEVICE=/dev/xvdf
-OWNER=www-data
-DEST=/usr/share/wordpress/wp-content
 OLDDEST=$DEST-old
-# if this directory is present, assume volume contains initial data
-CHECK_DIR=$DEST/themes
 
 devpath=$(readlink -f $DEVICE)
 

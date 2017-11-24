@@ -42,3 +42,22 @@ resource "aws_eip" "public" {
   instance = "${aws_instance.wordpress.id}"
   vpc = true
 }
+
+locals {
+  mount_dest = "/usr/share/wordpress/wp-content"
+}
+
+module "wp_content" {
+  source = "../modules/persistent_volume"
+
+  az = "${data.aws_subnet.public.availability_zone}"
+  instance_id = "${aws_instance.wordpress.id}"
+  check_dir = "${local.mount_dest}/themes"
+  owner = "www-data"
+  mount_dest = "${local.mount_dest}"
+  ssh_user = "${var.ssh_user}"
+
+  # ensures the IP is associated before the volume is mounted
+  # https://github.com/hashicorp/terraform/issues/557
+  ssh_host = "${aws_eip.public.public_ip}"
+}
