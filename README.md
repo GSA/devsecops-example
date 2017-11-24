@@ -50,6 +50,15 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     terraform apply
     ```
 
+1. Create the Jenkins secrets.
+    1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
+    1. Create a secrets file.
+
+        ```sh
+        cp ../ansible/group_vars/jenkins/secrets.yml.example ../ansible/group_vars/jenkins/secrets.yml
+        ```
+
+    1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)).
 1. Deploy Jenkins.
 
     ```sh
