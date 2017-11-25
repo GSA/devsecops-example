@@ -14,10 +14,6 @@ data "aws_ami" "wordpress" {
   owners = ["self"]
 }
 
-data "aws_subnet" "public" {
-  id = "${module.network.public_subnets[0]}"
-}
-
 resource "aws_instance" "wordpress" {
   ami = "${data.aws_ami.wordpress.id}"
   instance_type = "t2.micro"
@@ -52,9 +48,9 @@ module "wp_content" {
 
   az = "${data.aws_subnet.public.availability_zone}"
   instance_id = "${aws_instance.wordpress.id}"
-  check_dir = "${local.mount_dest}/themes"
+  check_dir = "themes"
   owner = "www-data"
-  mount_dest = "${local.mount_dest}"
+  mount_dest = "/usr/share/wordpress/wp-content"
   ssh_user = "${var.ssh_user}"
 
   # ensures the IP is associated before the volume is mounted

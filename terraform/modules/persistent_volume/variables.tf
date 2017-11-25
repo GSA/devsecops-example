@@ -31,6 +31,6 @@ variable "mount_dest" {
 }
 
 variable "check_dir" {
-  description = "Absolute path - if this directory is present, assume volume contains initial data"
+  description = "Relative path to the mount_dest. If this directory is present, assume volume contains initial data."
   type = "string"
 }

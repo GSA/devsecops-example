@@ -38,7 +38,7 @@ resource "aws_volume_attachment" "main" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x ${local.script_dest}",
-      "DEVICE=${var.device} OWNER=${var.owner} DEST=${var.mount_dest} CHECK_DIR=${var.check_dir} ${local.script_dest}"
+      "DEVICE=${var.device} OWNER=${var.owner} DEST=${var.mount_dest} CHECK_DIR=${var.mount_dest}/${var.check_dir} ${local.script_dest}"
     ]
   }
 }
