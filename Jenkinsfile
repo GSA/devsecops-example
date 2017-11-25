@@ -9,11 +9,12 @@ pipeline {
 
         checkout scm
         echo 'ls'
-        dir('terraform/env') {
-          sh 'cp terraform.tfvars.example terraform.tfvars'
-          sh 'terraform init'
-          sh 'terraform apply'
-        }
+
+        // need to `cd` because `dir()` isn't working in Docker
+        // https://issues.jenkins-ci.org/browse/JENKINS-33510
+        sh 'cd terraform/env && cp terraform.tfvars.example terraform.tfvars'
+        sh 'cd terraform/env && terraform init'
+        sh 'cd terraform/env && terraform apply'
       }
     }
   }
