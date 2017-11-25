@@ -7,6 +7,7 @@ variable "instance_id" {
   type = "string"
 }
 
+
 variable "ssh_host" {
   default = ""
   description = "The instance's SSH hostname. Default to the public_ip of the instance. Only needed if you're using an Elastic IP."
@@ -16,9 +17,25 @@ variable "ssh_user" {
   type = "string"
 }
 
-variable "device" {
+
+variable "volume_type" {
+  default = "gp2"
+  description = "'API Name' from https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html"
+}
+
+variable "size" {
+  default = 10
+  description = "The size of the volume, in GB"
+}
+
+variable "external_device_name" {
+  default = "/dev/sdf"
+  description = "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html"
+}
+
+variable "internal_device_name" {
   default = "/dev/xvdf"
-  description = "Note this won't necessarily match the device_name on the aws_volume_attachment"
+  description = "Note this won't necessarily match the external_device_name - see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html"
 }
 
 variable "owner" {

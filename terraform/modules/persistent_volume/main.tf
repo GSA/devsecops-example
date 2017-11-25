@@ -1,7 +1,7 @@
 resource "aws_ebs_volume" "main" {
   availability_zone = "${var.az}"
-  type = "gp2"
-  size = 10
+  type = "${var.volume_type}"
+  size = "${var.size}"
   encrypted = true
 
   lifecycle {
@@ -18,7 +18,7 @@ locals {
 }
 
 resource "aws_volume_attachment" "main" {
-  device_name = "/dev/sdf"
+  device_name = "${var.external_device_name}"
   volume_id = "${aws_ebs_volume.main.id}"
   instance_id = "${var.instance_id}"
 
@@ -38,7 +38,7 @@ resource "aws_volume_attachment" "main" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x ${local.script_dest}",
-      "DEVICE=${var.device} OWNER=${var.owner} DEST=${var.mount_dest} CHECK_DIR=${var.mount_dest}/${var.check_dir} ${local.script_dest}"
+      "DEVICE=${var.internal_device_name} OWNER=${var.owner} DEST=${var.mount_dest} CHECK_DIR=${var.mount_dest}/${var.check_dir} ${local.script_dest}"
     ]
   }
 
