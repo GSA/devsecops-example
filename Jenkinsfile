@@ -18,7 +18,8 @@ pipeline {
         // TODO find better way of specifying this secret
         sh 'cd terraform/env && cp terraform.tfvars.example terraform.tfvars'
         // https://www.terraform.io/guides/running-terraform-in-automation.html#auto-approval-of-plans
-        sh 'cd terraform/env && terraform init -input=false'
+        // TODO remove the -reconfigure
+        sh 'cd terraform/env && terraform init -input=false -reconfigure'
         sh 'cd terraform/env && terraform apply -input=false -auto-approve'
       }
     }
