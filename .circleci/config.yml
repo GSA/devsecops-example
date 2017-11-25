@@ -1,6 +1,15 @@
 version: 2
 jobs:
-  build:
+  packer:
+    docker:
+      - image: hashicorp/packer
+    steps:
+      - checkout
+      - run:
+          name: Validate Packer template
+          command: packer validate -syntax-only packer.json
+
+  terraform:
     docker:
       - image: hashicorp/terraform
         environment:
@@ -27,3 +36,11 @@ jobs:
       - run:
           name: env - Validate Terraform
           command: cd terraform/env && terraform validate
+
+workflows:
+  version: 2
+
+  validate:
+    jobs:
+      - packer
+      - terraform
