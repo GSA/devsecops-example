@@ -6,6 +6,7 @@ pipeline {
       agent { dockerfile true }
       steps {
         echo 'ansible-playbook --version'
+        echo 'terraform version'
 
         checkout scm
         echo 'ls'
