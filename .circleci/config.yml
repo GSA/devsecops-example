@@ -45,6 +45,13 @@ jobs:
           command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
 
       - run:
+          name: bootstrap - Set up Terraform
+          command: cd terraform/bootstrap && terraform init -backend=false
+      - run:
+          name: bootstrap - Validate Terraform
+          command: cd terraform/bootstrap && terraform validate
+
+      - run:
           name: mgmt - Set up Terraform
           command: cd terraform/mgmt && terraform init -backend=false
       - run:
