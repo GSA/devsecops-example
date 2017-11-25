@@ -5,8 +5,9 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "devsecops-example"
-    key = "terraform/terraform.tfstate"
+    bucket = "devsecops-example-mgmt"
+    # TODO better strategy for backend uniqueness
+    key = "terraform/env.tfstate"
   }
 }
 
