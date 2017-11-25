@@ -1,12 +1,33 @@
 version: 2
 jobs:
-  build:
+  ansible:
+    docker:
+      - image: williamyeh/ansible:alpine3
+    steps:
+      - checkout
+      - run:
+          name: Install Ansible dependencies
+          command: apk add --no-cache git
+      - run:
+          name: Download Ansible dependencies
+          command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
+      - persist_to_workspace:
+          # doesn't allow the full directory to be persisted, so only save the roles
+          # https://circleci.com/docs/2.0/configuration-reference/#persist_to_workspace
+          root: ansible/roles
+          paths:
+            - ./*
+
+  terraform:
     docker:
       - image: hashicorp/terraform
         environment:
           AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
+      - attach_workspace:
+          at: ansible/roles
+
       - run:
           name: Create fake SSH public key
           command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
@@ -27,3 +48,13 @@ jobs:
       - run:
           name: env - Validate Terraform
           command: cd terraform/env && terraform validate
+
+workflows:
+  version: 2
+
+  validate:
+    jobs:
+      - ansible
+      - terraform:
+          requires:
+            - ansible
