@@ -6,6 +6,8 @@ pipeline {
       agent { dockerfile true }
       steps {
         echo 'ansible-playbook --version'
+
+        checkout scm
         echo 'ls'
         dir('terraform/env') {
           sh 'cp terraform.tfvars.example terraform.tfvars'
