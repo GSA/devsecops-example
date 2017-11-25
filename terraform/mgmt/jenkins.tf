@@ -20,16 +20,40 @@ data "aws_ami" "jenkins" {
   owners = ["self"]
 }
 
+locals {
+  jenkins_ssh_user = "ec2-user"
+}
+
 module "jenkins_instances" {
   source = "../../ansible/roles/gsa.jenkins/terraform/modules/instances"
 
   ami = "${data.aws_ami.jenkins.id}"
   key_name = "${aws_key_pair.deployer.key_name}"
   subnet_id = "${module.network.public_subnets[0]}"
+  vm_user = "${local.jenkins_ssh_user}"
   vpc_security_group_ids = ["${module.jenkins_networking.sg_id}"]
 }
 
 resource "aws_eip" "jenkins" {
   instance = "${module.jenkins_instances.instance_id}"
   vpc = true
+}
+
+# https://tech.gogoair.com/immutable-jenkins-ae54e4a37a6a
+module "jenkins_data" {
+  source = "../modules/persistent_volume"
+
+  az = "${data.aws_subnet.public.availability_zone}"
+  instance_id = "${module.jenkins_instances.instance_id}"
+  check_dir = "nodes"
+  owner = "jenkins"
+  mount_dest = "/var/lib/jenkins"
+  ssh_user = "${local.jenkins_ssh_user}"
+
+  # force the configuration to be read from disk
+  post_mount = ["sudo systemctl restart jenkins"]
+
+  # ensures the IP is associated before the volume is mounted
+  # https://github.com/hashicorp/terraform/issues/557
+  ssh_host = "${aws_eip.jenkins.public_ip}"
 }

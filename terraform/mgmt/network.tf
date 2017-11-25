@@ -17,3 +17,7 @@ module "flow_logs" {
   # temporary, while working in a single account
   prefix = "mgmt"
 }
+
+data "aws_subnet" "public" {
+  id = "${module.network.public_subnets[0]}"
+}
