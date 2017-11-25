@@ -18,9 +18,12 @@ pipeline {
         // TODO find better way of specifying this secret
         sh 'cd terraform/env && cp terraform.tfvars.example terraform.tfvars'
         // https://www.terraform.io/guides/running-terraform-in-automation.html#auto-approval-of-plans
-        // TODO remove the -reconfigure
+        // TODO remove the -reconfigure. Seem to be hitting
+        // https://github.com/hashicorp/terraform/issues/13149
         sh 'cd terraform/env && terraform init -input=false -reconfigure'
-        sh 'cd terraform/env && terraform apply -input=false -auto-approve'
+        sshagent(credentials: ['jenkins-ssh-key']) {
+          sh 'cd terraform/env && terraform apply -input=false -auto-approve'
+        }
       }
     }
   }

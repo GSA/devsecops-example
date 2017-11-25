@@ -73,6 +73,8 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform apply
     ```
 
+1. Go through the [Jenkins manual configuration](https://github.com/GSA/jenkins-deploy/blob/master/docs/manual_config.md).
+
 ### Application environment
 
 1. Create the Terraform variables file.
