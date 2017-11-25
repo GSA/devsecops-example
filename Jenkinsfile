@@ -4,12 +4,14 @@ pipeline {
   stages {
     stage('Build') {
       agent { dockerfile true }
+      environment {
+        AWS_DEFAULT_REGION = 'us-east-2'
+      }
       steps {
-        echo 'ansible-playbook --version'
-        echo 'terraform version'
+        sh 'ansible-playbook --version'
+        sh 'terraform version'
 
         checkout scm
-        echo 'ls'
 
         // need to `cd` because `dir()` isn't working in Docker
         // https://issues.jenkins-ci.org/browse/JENKINS-33510
