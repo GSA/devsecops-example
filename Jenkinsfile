@@ -3,9 +3,7 @@ pipeline {
 
   stages {
     stage('Build') {
-      agent {
-        docker { image 'hashicorp/packer' }
-      }
+      agent { dockerfile true }
       steps {
         echo 'Building..'
       }
