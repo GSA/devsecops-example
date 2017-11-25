@@ -50,6 +50,9 @@ module "jenkins_data" {
   mount_dest = "/var/lib/jenkins"
   ssh_user = "${local.jenkins_ssh_user}"
 
+  # force the configuration to be read from disk
+  post_mount = ["sudo systemctl restart jenkins"]
+
   # ensures the IP is associated before the volume is mounted
   # https://github.com/hashicorp/terraform/issues/557
   ssh_host = "${aws_eip.jenkins.public_ip}"

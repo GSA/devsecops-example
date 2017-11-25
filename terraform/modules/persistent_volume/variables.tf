@@ -34,3 +34,8 @@ variable "check_dir" {
   description = "Relative path to the mount_dest. If this directory is present, assume volume contains initial data."
   type = "string"
 }
+
+variable "post_mount" {
+  default = []
+  description = "Commands to run on the instance after the volume is mounted"
+}
