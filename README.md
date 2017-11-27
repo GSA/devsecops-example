@@ -36,15 +36,16 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 1. Set up the Terraform backend.
 
     ```sh
-    aws s3api create-bucket --bucket devsecops-example-mgmt
-    aws s3api put-bucket-versioning --bucket devsecops-example-mgmt --versioning-configuration Status=Enabled
+    cd terraform/bootstrap
+    terraform init
+    terraform apply
     ```
     NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique per-region. If you get an error that the bucket name is not available, then your choice was not unique.
 
 1. Set up environment using Terraform.
 
     ```sh
-    cd terraform/mgmt
+    cd ../mgmt
     export AWS_DEFAULT_REGION=us-east-1
     terraform init
     terraform apply
