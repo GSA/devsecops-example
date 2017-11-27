@@ -24,8 +24,11 @@ pipeline {
         sh 'cd terraform/env && cp terraform.tfvars.example terraform.tfvars'
         // https://www.terraform.io/guides/running-terraform-in-automation.html#auto-approval-of-plans
         sh 'cd terraform/env && terraform init -input=false'
+
         // bootstrap the environment with the required resources
         sh 'cd terraform/env && terraform apply -input=false -auto-approve -target=aws_route53_record.db'
+
+        sh 'ansible-galaxy install -p ansible/roles -r ansible/requirements.yml'
         sh '''
           cd terraform/env && \
           packer build \
@@ -35,6 +38,7 @@ pipeline {
             -var db_pass=$(terraform output db_pass) \
             ../../packer/wordpress.json
         '''
+
         // build the remaining infrastructure
         sh 'cd terraform/env && terraform apply -input=false -auto-approve'
       }
