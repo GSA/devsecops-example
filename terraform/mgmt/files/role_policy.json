@@ -16,6 +16,7 @@
         "elasticloadbalancing:DescribeLoadBalancers",
         "iam:*InstanceProfile*",
         "iam:*Role*",
+        "logs:*",
         "rds:*",
         "route53:*",
         "route53domains:*",
