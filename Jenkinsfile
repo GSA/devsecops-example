@@ -1,6 +1,11 @@
 pipeline {
   agent none
 
+  triggers {
+    // every minute
+    pollSCM('* * * * *')
+  }
+
   stages {
     stage('Build') {
       agent { dockerfile true }
