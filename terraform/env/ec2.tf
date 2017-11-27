@@ -1,9 +1,3 @@
-resource "aws_key_pair" "deployer" {
-  key_name_prefix = "deployer-key"
-  // TODO get from the Jenkins public key
-  public_key = "${file("~/.ssh/id_rsa.pub")}"
-}
-
 data "aws_ami" "wordpress" {
   most_recent = true
 
@@ -20,7 +14,6 @@ resource "aws_instance" "wordpress" {
   instance_type = "t2.micro"
   subnet_id = "${data.aws_subnet.public.id}"
   vpc_security_group_ids = ["${aws_security_group.wordpress_ec2.id}"]
-  key_name = "${aws_key_pair.deployer.key_name}"
 
   tags {
     Name = "WordPress"
