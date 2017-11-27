@@ -6,8 +6,7 @@
     "db_name": null,
     "db_user": null,
     "db_pass": null,
-    "region": "{{env `AWS_DEFAULT_REGION`}}",
-    "subnet_id": null
+    "region": "{{env `AWS_DEFAULT_REGION`}}"
   },
   "provisioners": [
     {
@@ -31,7 +30,6 @@
       "most_recent": true
     },
     "instance_type": "t2.micro",
-    "subnet_id": "{{user `subnet_id`}}",
     "ssh_username": "ubuntu",
     "ami_name": "wordpress {{timestamp}}"
   }]

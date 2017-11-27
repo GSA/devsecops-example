@@ -1,3 +1,8 @@
+variable "bootstrap" {
+  default = false
+  description = "Set to true when doing the initial setup of the environment, before the WordPress AMI is created. Needed to avoid a circular dependency."
+}
+
 variable "vpc_cidr" {
   default = "10.0.0.0/16"
 }

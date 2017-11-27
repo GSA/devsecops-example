@@ -113,7 +113,6 @@ For initial or subsequent deployment:
 
     ```sh
     packer build \
-      -var subnet_id=$(terraform output public_subnet_id) \
       -var db_host=$(terraform output db_host) \
       -var db_name=$(terraform output db_name) \
       -var db_user=$(terraform output db_user) \

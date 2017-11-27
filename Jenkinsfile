@@ -26,9 +26,7 @@ pipeline {
         // TODO remove the -reconfigure. Seem to be hitting
         // https://github.com/hashicorp/terraform/issues/13149
         sh 'cd terraform/env && terraform init -input=false -reconfigure'
-        sshagent(credentials: ['jenkins-ssh-key']) {
-          sh 'cd terraform/env && terraform apply -input=false -auto-approve'
-        }
+        sh 'cd terraform/env && terraform apply -input=false -auto-approve -var bootstrap=true'
       }
     }
   }
