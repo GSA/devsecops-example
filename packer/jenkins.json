@@ -1,0 +1,36 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "jenkins_host": null,
+    "region": "{{env `AWS_DEFAULT_REGION`}}",
+    "subnet_id": null
+  },
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "../../ansible/jenkins.yml",
+      "groups": ["jenkins"],
+      "extra_arguments": ["--extra-vars", "jenkins_external_hostname={{user `jenkins_host`}}"]
+    }
+  ],
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `region`}}",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "RHEL-7.4_HVM_GA-*",
+        "root-device-type": "ebs"
+      },
+      "owners": ["309956199498"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "subnet_id": "{{user `subnet_id`}}",
+    "ssh_username": "ec2-user",
+    "ami_name": "jenkins {{timestamp}}"
+  }]
+}

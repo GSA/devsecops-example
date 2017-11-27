@@ -4,6 +4,7 @@
 # Ansible
 ansible/roles/
 *.retry
+secrets.yml
 
 ## Terraform ##
 *.tfvars

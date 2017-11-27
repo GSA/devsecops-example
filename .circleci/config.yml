@@ -1,13 +1,34 @@
 version: 2
 jobs:
+  ansible:
+    docker:
+      - image: williamyeh/ansible:alpine3
+    steps:
+      - checkout
+      - run:
+          name: Install Ansible dependencies
+          command: apk add --no-cache git
+      - run:
+          name: Download Ansible dependencies
+          command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
+      - persist_to_workspace:
+          # doesn't allow the full directory to be persisted, so only save the roles
+          # https://circleci.com/docs/2.0/configuration-reference/#persist_to_workspace
+          root: ansible/roles
+          paths:
+            - ./*
+
   packer:
     docker:
       - image: hashicorp/packer
     steps:
       - checkout
       - run:
-          name: Validate Packer template
-          command: packer validate -syntax-only packer.json
+          name: Validate Jenkins template
+          command: packer validate -syntax-only packer/jenkins.json
+      - run:
+          name: Validate WordPress template
+          command: packer validate -syntax-only packer/wordpress.json
 
   terraform:
     docker:
@@ -16,6 +37,9 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
+      - attach_workspace:
+          at: ansible/roles
+
       - run:
           name: Create fake SSH public key
           command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
@@ -42,5 +66,8 @@ workflows:
 
   validate:
     jobs:
+      - ansible
       - packer
-      - terraform
+      - terraform:
+          requires:
+            - ansible

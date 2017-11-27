@@ -2,7 +2,7 @@
 
 This repository is an example of best-practice deployment for the [General Services Administration](https://www.gsa.gov/). More specifically, it demonstrates how to do configuration and deployment for an application that writes to disk. See [the DevSecOps Guide](https://tech.gsa.gov/guides/dev_sec_ops_guide/) for more information.
 
-The example application being deployed is [WordPress](https://wordpress.org/). With a default configuration, WordPress will save uploads, themes, and plugins to the local disk. This means that it violates the [Twelve-Factor App](https://12factor.net/) [Processes](https://12factor.net/processes) rule. While WordPress _can_ be configured to save files elsewhere ([example](https://github.com/dzuelke/wordpress-12factor)), it is being used here as a stand-in for pieces of (legacy?) software that don't have that option.
+The example application being deployed is [WordPress](https://wordpress.org/). With a default configuration, WordPress will save uploads, themes, and plugins to the local disk. This means that it violates the [Twelve-Factor App](https://12factor.net/) [Processes](https://12factor.net/processes) rule. While WordPress _can_ be configured to save files elsewhere ([example](https://github.com/dzuelke/wordpress-12factor)), it is being used here as a stand-in for pieces of (legacy?) software that don't have that option. Jenkins is also deployed.
 
 This is just an example implementation of the GSA DevSecOps principles/component - the repository should still be useful to you, even if you aren't using WordPress, or your architecture isn't exactly the same.
 
@@ -47,6 +47,26 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     cd terraform/mgmt
     export AWS_DEFAULT_REGION=us-east-1
     terraform init
+    terraform apply
+    ```
+
+1. Create the Jenkins secrets.
+    1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
+    1. Create a secrets file.
+
+        ```sh
+        cp ../ansible/group_vars/jenkins/secrets.yml.example ../ansible/group_vars/jenkins/secrets.yml
+        ```
+
+    1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)).
+1. Deploy Jenkins.
+
+    ```sh
+    packer build \
+      -var jenkins_host=$(terraform output jenkins_host) \
+      -var subnet_id=$(terraform output public_subnet_id) \
+      ../../packer/jenkins.json
+
     terraform apply
     ```
 
@@ -101,7 +121,7 @@ For initial or subsequent deployment:
       -var db_name=$(terraform output db_name) \
       -var db_user=$(terraform output db_user) \
       -var db_pass=$(terraform output db_pass) \
-      ../../packer.json
+      ../../packer/wordpress.json
     ```
 
 1. Deploy the latest AMI.

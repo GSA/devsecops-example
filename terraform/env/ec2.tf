@@ -14,10 +14,6 @@ data "aws_ami" "wordpress" {
   owners = ["self"]
 }
 
-data "aws_subnet" "public" {
-  id = "${module.network.public_subnets[0]}"
-}
-
 resource "aws_instance" "wordpress" {
   ami = "${data.aws_ami.wordpress.id}"
   instance_type = "t2.micro"
@@ -41,4 +37,19 @@ resource "aws_instance" "wordpress" {
 resource "aws_eip" "public" {
   instance = "${aws_instance.wordpress.id}"
   vpc = true
+}
+
+module "wp_content" {
+  source = "../modules/persistent_volume"
+
+  az = "${data.aws_subnet.public.availability_zone}"
+  instance_id = "${aws_instance.wordpress.id}"
+  check_dir = "themes"
+  owner = "www-data"
+  mount_dest = "/usr/share/wordpress/wp-content"
+  ssh_user = "${var.ssh_user}"
+
+  # ensures the IP is associated before the volume is mounted
+  # https://github.com/hashicorp/terraform/issues/557
+  ssh_host = "${aws_eip.public.public_ip}"
 }

@@ -21,3 +21,7 @@ module "flow_logs" {
   source = "github.com/GSA/terraform-vpc-flow-log"
   vpc_id = "${module.network.vpc_id}"
 }
+
+data "aws_subnet" "public" {
+  id = "${module.network.public_subnets[0]}"
+}
