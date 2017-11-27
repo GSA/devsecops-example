@@ -5,21 +5,21 @@
       "Sid": "AllowActions",
       "Effect": "Allow",
       "Action": [
-        "ec2:*",
-        "rds:*",
-        "dynamodb:*",
         "autoscaling:*",
-        "cloudwatch:PutMetricAlarm",
-        "route53:*",
-        "route53domains:*",
         "cloudfront:ListDistributions",
-        "elasticloadbalancing:DescribeLoadBalancers",
-        "elasticbeanstalk:DescribeEnvironments",
-        "sns:ListTopics",
-        "sns:ListSubscriptionsByTopic",
         "cloudwatch:DescribeAlarms",
         "cloudwatch:GetMetricStatistics",
-        "s3:*"
+        "cloudwatch:PutMetricAlarm",
+        "dynamodb:*",
+        "ec2:*",
+        "elasticbeanstalk:DescribeEnvironments",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "rds:*",
+        "route53:*",
+        "route53domains:*",
+        "s3:*",
+        "sns:ListSubscriptionsByTopic",
+        "sns:ListTopics"
       ],
       "Resource": "*"
     }
