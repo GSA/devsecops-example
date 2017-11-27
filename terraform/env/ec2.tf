@@ -1,22 +1,9 @@
 data "aws_ami" "wordpress" {
-  count = "${var.bootstrap ? 0 : 1}"
-
   most_recent = true
 
   filter {
     name = "name"
-    values = ["wordpress *"]
-  }
-
-  owners = ["self"]
-}
-
-data "aws_ami" "placeholder" {
-  most_recent = true
-
-  filter {
-    name = "name"
-    values = ["*ubuntu-xenial-16.04-amd64-server-*"]
+    values = ["${var.bootstrap ? "*ubuntu-xenial-16.04-amd64-server-*" : "wordpress *"}"]
   }
 
   filter {
@@ -29,12 +16,11 @@ data "aws_ami" "placeholder" {
     values = ["ebs"]
   }
 
-  # Canonical
-  owners = ["099720109477"]
+  owners = ["${var.bootstrap ? "099720109477" : "self"}"]
 }
 
 resource "aws_instance" "wordpress" {
-  ami = "${var.bootstrap ? data.aws_ami.placeholder.id : data.aws_ami.wordpress.id}"
+  ami = "${data.aws_ami.wordpress.id}"
   instance_type = "t2.micro"
   subnet_id = "${data.aws_subnet.public.id}"
   vpc_security_group_ids = ["${aws_security_group.wordpress_ec2.id}"]
