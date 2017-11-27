@@ -39,10 +39,6 @@ resource "aws_eip" "public" {
   vpc = true
 }
 
-locals {
-  mount_dest = "/usr/share/wordpress/wp-content"
-}
-
 module "wp_content" {
   source = "../modules/persistent_volume"
 
