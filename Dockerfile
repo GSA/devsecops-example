@@ -13,3 +13,4 @@ RUN apk add --no-cache git terraform
 # required for Packer
 # https://groups.google.com/d/msg/packer-tool/92wq5kYOvto/kkzoASaMAQAJ
 ENV USER root
+WORKDIR /${USER}

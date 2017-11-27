@@ -17,6 +17,8 @@ pipeline {
         sh 'terraform version'
 
         checkout scm
+        sh 'pwd'
+        sh 'ls -a'
 
         // need to `cd` because `dir()` isn't working in Docker
         // https://issues.jenkins-ci.org/browse/JENKINS-33510
