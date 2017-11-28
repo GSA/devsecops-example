@@ -11,6 +11,7 @@ pipeline {
       agent {
         docker {
           image '18fgsa/devsecops-builder'
+          alwaysPull true
           // https://support.cloudbees.com/hc/en-us/articles/218583777-How-to-set-user-in-docker-image-
           args '-u root'
         }
