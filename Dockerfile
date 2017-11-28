@@ -16,6 +16,6 @@ RUN unzip /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin
 
 # workaround for Ansible not being able to create these from Jenkins
 RUN touch /.ansible_galaxy
-RUN chmod 644 /.ansible_galaxy
+RUN chmod 666 /.ansible_galaxy
 RUN mkdir /.ansible
-RUN chmod 755 /.ansible
+RUN chmod 777 /.ansible
