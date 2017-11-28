@@ -17,7 +17,6 @@ pipeline {
         sh 'terraform version'
 
         checkout scm
-        sh 'whoami'
         sh 'pwd'
         sh 'ls -a'
 
@@ -31,7 +30,12 @@ pipeline {
         // bootstrap the environment with the resources requried for Packer
         sh 'cd terraform/env && terraform apply -input=false -auto-approve -target=aws_route53_record.db'
 
-        sh 'ansible-galaxy install -p ansible/roles -r ansible/requirements.yml -vvv'
+        script {
+          // https://support.cloudbees.com/hc/en-us/articles/218583777-How-to-set-user-in-docker-image-
+          docker.withRun('-u root') {
+            sh 'ansible-galaxy install -p ansible/roles -r ansible/requirements.yml -vvv'
+          }
+        }
         sh '''
           cd terraform/env && \
           packer build \
