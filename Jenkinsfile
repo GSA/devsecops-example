@@ -17,6 +17,7 @@ pipeline {
         sh 'terraform version'
 
         checkout scm
+        sh 'whoami'
         sh 'pwd'
         sh 'ls -a'
 
@@ -31,17 +32,15 @@ pipeline {
         sh 'cd terraform/env && terraform apply -input=false -auto-approve -target=aws_route53_record.db'
 
         sh 'ansible-galaxy install -p ansible/roles -r ansible/requirements.yml -vvv'
-        sshagent(credentials: ['jenkins-ssh-key']) {
-          sh '''
-            cd terraform/env && \
-            packer build \
-              -var db_host=$(terraform output db_host) \
-              -var db_name=$(terraform output db_name) \
-              -var db_user=$(terraform output db_user) \
-              -var db_pass=$(terraform output db_pass) \
-              ../../packer/wordpress.json
-          '''
-        }
+        sh '''
+          cd terraform/env && \
+          packer build \
+            -var db_host=$(terraform output db_host) \
+            -var db_name=$(terraform output db_name) \
+            -var db_user=$(terraform output db_user) \
+            -var db_pass=$(terraform output db_pass) \
+            ../../packer/wordpress.json
+        '''
 
         // build the remaining infrastructure
         sh 'cd terraform/env && terraform apply -input=false -auto-approve'

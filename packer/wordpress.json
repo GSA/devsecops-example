@@ -1,7 +1,5 @@
 {
   "variables": {
-    "aws_access_key": "",
-    "aws_secret_key": "",
     "db_host": null,
     "db_name": null,
     "db_user": null,

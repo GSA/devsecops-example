@@ -1,9 +1,5 @@
 FROM williamyeh/ansible:ubuntu16.04
 
-# required for Packer
-# https://groups.google.com/d/msg/packer-tool/92wq5kYOvto/kkzoASaMAQAJ
-ENV USER root
-
 RUN apt-get update -y && apt-get install -y git unzip
 
 ARG PACKER_VERSION=1.1.2
@@ -14,8 +10,12 @@ ARG TERRAFORM_VERSION=0.11.0
 ADD https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 RUN unzip /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin
 
-# workaround for Ansible not being able to create these from Jenkins
-RUN touch /.ansible_galaxy
-RUN chmod 666 /.ansible_galaxy
-RUN mkdir /.ansible
-RUN chmod 777 /.ansible
+# https://github.com/William-Yeh/docker-ansible/issues/14
+ARG USER=ansible
+RUN useradd -d /home/${USER} -m -s /bin/bash ${USER}
+RUN usermod -aG sudo,root ${USER}
+USER ${USER}
+# required for Packer
+# https://groups.google.com/d/msg/packer-tool/92wq5kYOvto/kkzoASaMAQAJ
+ENV USER ${USER}
+WORKDIR /home/${USER}
