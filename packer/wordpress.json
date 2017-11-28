@@ -1,13 +1,10 @@
 {
   "variables": {
-    "aws_access_key": "",
-    "aws_secret_key": "",
     "db_host": null,
     "db_name": null,
     "db_user": null,
     "db_pass": null,
-    "region": "{{env `AWS_DEFAULT_REGION`}}",
-    "subnet_id": null
+    "region": "{{env `AWS_DEFAULT_REGION`}}"
   },
   "provisioners": [
     {
@@ -18,8 +15,6 @@
   ],
   "builders": [{
     "type": "amazon-ebs",
-    "access_key": "{{user `aws_access_key`}}",
-    "secret_key": "{{user `aws_secret_key`}}",
     "region": "{{user `region`}}",
     "source_ami_filter": {
       "filters": {
@@ -31,7 +26,6 @@
       "most_recent": true
     },
     "instance_type": "t2.micro",
-    "subnet_id": "{{user `subnet_id`}}",
     "ssh_username": "ubuntu",
     "ami_name": "wordpress {{timestamp}}"
   }]
