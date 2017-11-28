@@ -1,6 +1,7 @@
 FROM williamyeh/ansible:ubuntu16.04
 
-RUN apt-get update -y && apt-get install -y git unzip
+RUN apt-get update -y && \
+  apt-get install -y git unzip
 
 ARG PACKER_VERSION=1.1.2
 ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip /tmp/packer_${PACKER_VERSION}_linux_amd64.zip
