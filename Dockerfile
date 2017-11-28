@@ -14,5 +14,6 @@ ARG TERRAFORM_VERSION=0.11.0
 ADD https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 RUN unzip /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin
 
-# workaround for Ansible needing this directory but not being able to create it from Jenkins
-RUN mkdir /.ansible_galaxy
+# workaround for Ansible needing this file but not being able to create it from Jenkins
+RUN touch /.ansible_galaxy
+RUN chmod 0644 /.ansible_galaxy
