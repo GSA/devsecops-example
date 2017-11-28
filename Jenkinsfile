@@ -8,7 +8,13 @@ pipeline {
 
   stages {
     stage('Build') {
-      agent { dockerfile true }
+      agent {
+        docker {
+          image '18fgsa/devsecops-builder'
+          // https://support.cloudbees.com/hc/en-us/articles/218583777-How-to-set-user-in-docker-image-
+          args '-u root'
+        }
+      }
       environment {
         AWS_DEFAULT_REGION = 'us-east-2'
       }
@@ -30,13 +36,7 @@ pipeline {
         // bootstrap the environment with the resources requried for Packer
         sh 'cd terraform/env && terraform apply -input=false -auto-approve -target=aws_route53_record.db'
 
-        script {
-          def myEnv = docker.build 'devsecops-example'
-          // https://support.cloudbees.com/hc/en-us/articles/218583777-How-to-set-user-in-docker-image-
-          myEnv.withRun('-u root') {
-            sh 'ansible-galaxy install -p ansible/roles -r ansible/requirements.yml -vvv'
-          }
-        }
+        sh 'ansible-galaxy install -p ansible/roles -r ansible/requirements.yml -vvv'
         sh '''
           cd terraform/env && \
           packer build \
