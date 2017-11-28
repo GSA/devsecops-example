@@ -24,6 +24,11 @@
         - db_user
         - db_pass
 
+    - name: Authorize Jenkins SSH key
+      authorized_key:
+        user: "{{ remote_user }}"
+        key: "{{ jenkins_ssh_public_key_data }}"
+
     # https://help.ubuntu.com/lts/serverguide/wordpress.html
 
     - name: Install WordPress

@@ -1,17 +1,22 @@
-resource "aws_key_pair" "deployer" {
-  key_name_prefix = "deployer-key"
-  public_key = "${file("~/.ssh/id_rsa.pub")}"
-}
-
 data "aws_ami" "wordpress" {
   most_recent = true
 
   filter {
     name = "name"
-    values = ["wordpress *"]
+    values = ["${var.bootstrap ? "*ubuntu-xenial-16.04-amd64-server-*" : "wordpress *"}"]
   }
 
-  owners = ["self"]
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  owners = ["${var.bootstrap ? "099720109477" : "self"}"]
 }
 
 resource "aws_instance" "wordpress" {
@@ -19,7 +24,6 @@ resource "aws_instance" "wordpress" {
   instance_type = "t2.micro"
   subnet_id = "${data.aws_subnet.public.id}"
   vpc_security_group_ids = ["${aws_security_group.wordpress_ec2.id}"]
-  key_name = "${aws_key_pair.deployer.key_name}"
 
   tags {
     Name = "WordPress"
