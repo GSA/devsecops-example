@@ -46,7 +46,7 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 
     ```sh
     cd ../mgmt
-    export AWS_DEFAULT_REGION=us-east-1
+    export AWS_DEFAULT_REGION=us-east-2
     terraform init
     terraform apply
     ```
@@ -92,7 +92,7 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 1. Set up environment using Terraform.
 
     ```sh
-    export AWS_DEFAULT_REGION=us-east-1
+    export AWS_DEFAULT_REGION=us-east-2
     terraform init
     ```
 
