@@ -28,6 +28,7 @@ module "jenkins_instances" {
   source = "../../ansible/roles/gsa.jenkins/terraform/modules/instances"
 
   ami = "${data.aws_ami.jenkins.id}"
+  iam_instance_profile = "${aws_iam_instance_profile.jenkins.name}"
   instance_type = "${var.jenkins_instance_type}"
   key_name = "${aws_key_pair.deployer.key_name}"
   subnet_id = "${module.network.public_subnets[0]}"
