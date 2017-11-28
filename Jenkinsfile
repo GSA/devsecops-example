@@ -11,6 +11,8 @@ pipeline {
       agent { dockerfile true }
       environment {
         AWS_DEFAULT_REGION = 'us-east-2'
+        // https://docs.ansible.com/ansible/2.4/config.html#default-local-tmp
+        DEFAULT_LOCAL_TMP = '/tmp'
       }
       steps {
         sh 'ansible-playbook --version'
