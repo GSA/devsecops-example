@@ -10,6 +10,8 @@ This is just an example implementation of the GSA DevSecOps principles/component
 
 WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects to a MySQL RDS instance in a private subnet. All of this is isolated in an application-specific VPC.
 
+Currently, both the management and environment VPCs will be deployed in the same account, but we are moving to having them separate.
+
 ## What's here
 
 * [`terraform/`](terraform/env/) - [Terraform](https://www.terraform.io/) code for setting up the infrastructure at the [Amazon Web Services (AWS)](https://aws.amazon.com/) level, for a management account ([`mgmt/`](terraform/mgmt/)) and application environment(s) ([`env/`](terraform/env/))
@@ -40,7 +42,7 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     terraform init
     terraform apply
     ```
-    NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique per-region. If you get an error that the bucket name is not available, then your choice was not unique.
+    NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique globally. If you get an error that the bucket name is not available, then your choice was not unique.
 
 1. Set up environment using Terraform.
 
@@ -71,15 +73,6 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     ```
 
 ### Application environment
-
-1. Set up the Terraform backend.
-
-    ```sh
-    aws s3api create-bucket --bucket devsecops-example
-    aws s3api put-bucket-versioning --bucket devsecops-example --versioning-configuration Status=Enabled
-    ```
-
-    _NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique per-region. If you get an error that the bucket name is not available, then your choice was not unique._
 
 1. Create the Terraform variables file.
 
