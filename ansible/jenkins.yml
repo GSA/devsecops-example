@@ -2,4 +2,5 @@
 - hosts: jenkins
   become: true
   roles:
+    - ansible-os-rhel-7
     - gsa.jenkins
