@@ -5,3 +5,7 @@ variable "vpc_cidr" {
 variable "public_subnet_cidr" {
   default = "10.0.0.0/24"
 }
+
+variable "jenkins_instance_type" {
+  default = "t2.micro"
+}
