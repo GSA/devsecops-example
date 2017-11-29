@@ -65,7 +65,6 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     ```sh
     packer build \
       -var jenkins_host=$(terraform output jenkins_host) \
-      -var subnet_id=$(terraform output public_subnet_id) \
       ../../packer/jenkins.json
 
     terraform apply
@@ -120,7 +119,6 @@ For initial or subsequent deployment:
 
     ```sh
     packer build \
-      -var subnet_id=$(terraform output public_subnet_id) \
       -var db_host=$(terraform output db_host) \
       -var db_name=$(terraform output db_name) \
       -var db_user=$(terraform output db_user) \
