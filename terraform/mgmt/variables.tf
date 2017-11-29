@@ -9,3 +9,7 @@ variable "public_subnet_cidr" {
 variable "jenkins_instance_type" {
   default = "t2.micro"
 }
+
+variable "env_backend_bucket" {
+  default = "devsecops-example-env"
+}
