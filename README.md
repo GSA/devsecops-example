@@ -79,7 +79,8 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
     aws s3api create-bucket --bucket devsecops-example
     aws s3api put-bucket-versioning --bucket devsecops-example --versioning-configuration Status=Enabled
     ```
-    NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique per-region. If you get an error that the bucket name is not available, then your choice was not unique.
+
+    _NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique per-region. If you get an error that the bucket name is not available, then your choice was not unique._
 
 1. Create the Terraform variables file.
 
@@ -107,11 +108,13 @@ WordPress runs on an Ubuntu 16.04 EC2 instance in a public subnet, and connects 
 
 For initial or subsequent deployment:
 
-1. Set up environment using Terraform.
+1. Bootstrap the environment using Terraform.
 
     ```sh
-    terraform apply
+    terraform apply -target=aws_route53_record.db
     ```
+
+    _NOTE: There is a circular dependency between the Terraform and Packer configurations. This workaround only creates the subset of the environment required for the AMI build._
 
 1. Build the AMI.
 
