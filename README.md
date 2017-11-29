@@ -72,6 +72,19 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform apply
     ```
 
+1. Create the Jenkins pipeline.
+    1. Visit [Blue Ocean](https://jenkins.io/projects/blueocean/) interface.
+
+        ```sh
+        open https://$(terraform output jenkins_host)/blue/
+        ```
+
+    1. Select `GitHub`.
+    1. Use an access token from a shared user.
+    1. For the GitHub organization, select `GSA`.
+    1. Select `New Pipeline`.
+    1. Select this repository.
+
 ### Application environment
 
 1. Create the Terraform variables file.

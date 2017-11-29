@@ -10,6 +10,10 @@ variable "jenkins_instance_type" {
   default = "t2.micro"
 }
 
+variable "jenkins_iam_role_name" {
+  default = "jenkins_role"
+}
+
 variable "env_backend_bucket" {
   default = "devsecops-example-env"
 }
