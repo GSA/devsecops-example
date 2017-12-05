@@ -7,12 +7,21 @@ pipeline {
   }
 
   stages {
+    stage('Dockerize') {
+      steps {
+        checkout scm
+
+        script {
+          docker.build("devsecops-builder:${env.BUILD_ID}")
+        }
+      }
+    }
+
     stage('Build') {
       agent {
         // we really just want to use `dockerfile`, but that doesn't (seem to) support `args`
         docker {
-          image '18fgsa/devsecops-builder'
-          alwaysPull true
+          image "devsecops-builder:${env.BUILD_ID}"
           // https://support.cloudbees.com/hc/en-us/articles/218583777-How-to-set-user-in-docker-image-
           args '-u jenkins:jenkins'
         }
@@ -25,7 +34,6 @@ pipeline {
         sh 'ansible-playbook --version'
         sh 'terraform version'
 
-        checkout scm
         sh 'pwd'
         sh 'ls -a'
 
