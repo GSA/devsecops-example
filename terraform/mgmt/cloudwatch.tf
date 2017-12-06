@@ -10,11 +10,11 @@ resource "aws_cloudwatch_metric_alarm" "high_memory_jenkins" {
   period                    = "300"
   statistic                 = "Average"
   threshold                 = "${var.high_memory_jenkins_alarm_threshold}"
-  alarm_description         = "This metric monitors ec2 memory utilization for the instance ${module.jenkins_instances.id}"
+  alarm_description         = "This metric monitors ec2 memory utilization for the instance ${module.jenkins_instances.instance_id}"
   alarm_actions = ["${aws_sns_topic.sns_general_availability.arn}"]
 
   dimensions {
-    InstanceId = "${module.jenkins_instances.id}"
+    InstanceId = "${module.jenkins_instances.instance_id}"
   }
 }
 
@@ -26,12 +26,12 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_wordpress" {
   namespace                 = "AWS/EC2"
   period                    = "120"
   statistic                 = "Average"
-  threshold                 = "${var.high_cpu_wordpress_alarm_threshold}"
-  alarm_description         = "This metric monitors ec2 cpu utilization and alarms for 80% over two eval periods on instance $${module.jenkins_instances.id}"
+  threshold                 = "${var.high_cpu_jenkins_alarm_threshold}"
+  alarm_description         = "This metric monitors ec2 cpu utilization and alarms for 80% over two eval periods on instance $${module.jenkins_instances.instance_id}"
   alarm_actions = ["${aws_sns_topic.sns_general_availability.arn}"]
 
   dimensions {
-    InstanceId = "${module.jenkins_instances.id}"
+    InstanceId = "${module.jenkins_instances.instance_id}"
   }
   insufficient_data_actions = []
 }
