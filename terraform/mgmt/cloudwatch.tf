@@ -14,7 +14,7 @@ resource "aws_cloudwatch_metric_alarm" "high_memory_jenkins" {
   alarm_actions = ["${aws_sns_topic.sns_general_availability.arn}"]
 
   dimensions {
-    InstanceId = "${module_jenkins_instances.id}"
+    InstanceId = "${module.jenkins_instances.id}"
   }
 }
 
@@ -31,7 +31,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_wordpress" {
   alarm_actions = ["${aws_sns_topic.sns_general_availability.arn}"]
 
   dimensions {
-    InstanceId = "${module_jenkins_instances.id}"
+    InstanceId = "${module.jenkins_instances.id}"
   }
   insufficient_data_actions = []
 }
