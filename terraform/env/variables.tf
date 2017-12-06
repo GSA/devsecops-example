@@ -31,3 +31,7 @@ variable "db_pass" {
 variable "ssh_user" {
   default = "ubuntu"
 }
+
+variable "wordpress_iam_role_name" {
+  default = "wordpress_role"
+}
