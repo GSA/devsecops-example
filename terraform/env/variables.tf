@@ -49,3 +49,15 @@ variable "general_availability_endpoint" {
   type = "string"
   description = "The destination (such as an email address) to send the monitoring alerts to. More info under https://docs.aws.amazon.com/cli/latest/reference/sns/subscribe.html#options. Note that changing this value will require you to run a 'taint aws_sns_topic.sns_general_availability' before an 'apply'."
 }
+
+variable "high_cpu_wordpress_alarm_threshold" {
+  type = "string"
+  description = "Percent CPU threshold for alarm on Wordpress instance"
+  default = "80"
+}
+
+variable "high_memory_wordpress_alarm_threshold" {
+  type = "string"
+  description = "Percent memory threshold for alarm on Wordpress instance"
+  default = "80"
+}
