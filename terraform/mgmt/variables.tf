@@ -22,3 +22,7 @@ variable "jenkins_iam_role_prefix" {
 variable "env_backend_bucket_prefix" {
   default = "devsecops-example-env"
 }
+
+variable "sns_general_availability_topic_name" {
+  default = "devsecops-example-availability-alarms"
+}
