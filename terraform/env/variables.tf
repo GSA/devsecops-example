@@ -35,3 +35,7 @@ variable "ssh_user" {
 variable "wordpress_iam_role_name" {
   default = "wordpress_role"
 }
+
+variable "sns_general_availability_topic_name" {
+  default = "devsecops-example-availability-alarms"
+}

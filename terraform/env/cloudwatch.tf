@@ -11,6 +11,7 @@ resource "aws_cloudwatch_metric_alarm" "high_mem" {
   statistic                 = "Average"
   threshold                 = "80"
   alarm_description         = "This metric monitors ec2 memory utilization for the instance ${aws_instance.wordpress.id}"
+  alarm_actions = ["${aws_sns_topic.sns_general_availability.arn}"]
 
   dimensions {
     InstanceId = "${aws_instance.wordpress.id}"
