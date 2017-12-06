@@ -44,13 +44,18 @@ Currently, both the management and environment VPCs will be deployed in the same
     ```
     NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique globally. If you get an error that the bucket name is not available, then your choice was not unique.
 
-1. Set up environment using Terraform.
+1. Set up Terraform.
 
     ```sh
     cd ../mgmt
     export AWS_DEFAULT_REGION=us-east-2
     terraform init
-    terraform apply
+    ```
+
+1. Bootstrap the environment using Terraform.
+
+    ```sh
+    terraform apply -target=aws_eip.jenkins
     ```
 
 1. Create the Jenkins secrets.
@@ -95,7 +100,7 @@ Currently, both the management and environment VPCs will be deployed in the same
     ```
 
 1. Fill out [`terraform.tfvars`](terraform/terraform.tfvars.example).
-1. Set up environment using Terraform.
+1. Set up Terraform.
 
     ```sh
     export AWS_DEFAULT_REGION=us-east-2
