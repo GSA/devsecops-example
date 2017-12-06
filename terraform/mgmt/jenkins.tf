@@ -6,17 +6,15 @@ module "jenkins_networking" {
 
 resource "aws_key_pair" "deployer" {
   key_name_prefix = "deployer-key"
-  # TODO: This should be configurable in variables
   public_key = "${file("~/.ssh/id_rsa.pub")}"
 }
 
 data "aws_ami" "jenkins" {
-  # TODO: Since the ansible role installs Jenkins and we can add the hardening role separately, why would there be a need for a specific Jenkins AMI in the current account? Maybe we should set a conditional that allows them to define a true/false variable to control this behavior. In my case, I'd rather just use the latest RHEL 7.4 AMI provided by Amazon, for instance (haha!)
   most_recent = true
 
   filter {
     name = "name"
-    values = ["jenkins*"]
+    values = ["jenkins *"]
   }
 
   owners = ["self"]
