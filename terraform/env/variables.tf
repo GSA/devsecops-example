@@ -39,3 +39,8 @@ variable "wordpress_iam_role_name" {
 variable "sns_general_availability_topic_name" {
   default = "devsecops-example-availability-alarms"
 }
+
+variable "general_availability_email" {
+  type = "string"
+  description = "The email address to send the monitoring alerts to. Note that changing this value will require you to run a 'taint aws_sns_topic.sns_general_availability' before an 'apply'."
+}
