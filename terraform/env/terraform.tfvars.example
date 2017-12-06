@@ -1,2 +1,2 @@
 db_pass = "<something>"
-general_availability_email = "something@gsa.gov"
+general_availability_endpoint = "something@gsa.gov"

@@ -5,6 +5,6 @@ resource "aws_sns_topic" "sns_general_availability" {
   # SMS not supported in all regions
   # https://docs.aws.amazon.com/sns/latest/dg/sms_supported-countries.html
   provisioner "local-exec" {
-    command = "aws sns subscribe --topic-arn ${self.arn} --protocol email --notification-endpoint ${var.general_availability_email}"
+    command = "aws sns subscribe --topic-arn ${self.arn} --protocol ${var.general_availability_protocol} --notification-endpoint ${var.general_availability_endpoint}"
   }
 }
