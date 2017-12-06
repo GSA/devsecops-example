@@ -10,6 +10,8 @@
         "cloudwatch:DescribeAlarms",
         "cloudwatch:GetMetricStatistics",
         "cloudwatch:PutMetricAlarm",
+        "cloudwatch:PutMetricData",
+        "cloudwatch:ListMetrics",
         "dynamodb:*",
         "ec2:*",
         "elasticbeanstalk:DescribeEnvironments",
