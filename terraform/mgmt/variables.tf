@@ -26,3 +26,15 @@ variable "env_backend_bucket_prefix" {
 variable "sns_general_availability_topic_name" {
   default = "devsecops-example-availability-alarms"
 }
+
+variable "high_cpu_jenkins_alarm_threshold" {
+  type = "string"
+  description = "Percent CPU threshold for alarm on Jenkins instance"
+  default = "80"
+}
+
+variable "high_memory_jenkins_alarm_threshold" {
+  type = "string"
+  description = "Percent memory threshold for alarm on Jenkins instance"
+  default = "80"
+}
