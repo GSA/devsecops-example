@@ -1,8 +1,7 @@
 module "network" {
   source = "terraform-aws-modules/vpc/aws"
 
-  # somewhat arbitrary - the later in the alphabet, the newer, which seems to provision faster
-  azs = ["${data.aws_region.current.name}c"]
+  azs = ["${data.aws_region.current.name}a"]
   cidr = "${var.vpc_cidr}"
   enable_dns_hostnames = true
   enable_dns_support = true

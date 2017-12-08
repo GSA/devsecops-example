@@ -38,6 +38,7 @@ Currently, both the management and environment VPCs will be deployed in the same
 1. Set up the Terraform backend.
 
     ```sh
+    export AWS_DEFAULT_REGION=us-east-2
     cd terraform/bootstrap
     terraform init
     terraform apply
@@ -48,7 +49,6 @@ Currently, both the management and environment VPCs will be deployed in the same
 
     ```sh
     cd ../mgmt
-    export AWS_DEFAULT_REGION=us-east-2
     terraform init
     ```
 
@@ -59,13 +59,13 @@ Currently, both the management and environment VPCs will be deployed in the same
     ```
 
 1. Create the Jenkins secrets.
-    1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
-    1. Create a secrets file.
+    1. Create a secrets file. _Note that, for simplicity, we're putting the secrets in a file not checked into version control. A real project should put the secrets in a [Vault](https://docs.ansible.com/ansible/latest/vault.html)._
 
         ```sh
-        cp ../ansible/group_vars/jenkins/secrets.yml.example ../ansible/group_vars/jenkins/secrets.yml
+        cp ../../ansible/group_vars/jenkins/secrets.yml.example ../../ansible/group_vars/jenkins/secrets.yml
         ```
 
+    1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
     1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)).
 1. Deploy Jenkins.
 
