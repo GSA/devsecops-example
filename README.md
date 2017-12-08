@@ -72,9 +72,19 @@ Currently, both the management and environment VPCs will be deployed in the same
         ```
 
     1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
-    1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)).
-1. Run the [deployment](#mgmt-deployment) steps below.
-1. Create the Jenkins pipeline.
+    1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)). This file SHOULD BE VAULTED with [ansible-vault](https://docs.ansible.com/ansible/2.4/vault.html).
+1. Run the deployment steps. These steps can be used later to create a new packer build of the jenkins AMI.
+    1. Run the following to deploy Jenkins or any other changes to `mgmt`.
+
+        ```sh
+        packer build \
+        -var jenkins_host=$(terraform output jenkins_host) \
+        ../../packer/jenkins.json
+
+        terraform apply
+        ```
+
+1. Create the Jenkins pipeline. Note that you will have to login to Jenkins first, using the password specified in the secrets.yml file.
     1. Visit [Blue Ocean](https://jenkins.io/projects/blueocean/) interface.
 
         ```sh
@@ -87,18 +97,6 @@ Currently, both the management and environment VPCs will be deployed in the same
     1. Select `New Pipeline`.
     1. Select this repository.
 
-#### mgmt deployment
-
-Run the following to deploy Jenkins or any other changes to `mgmt`.
-
-```sh
-packer build \
-  -var jenkins_host=$(terraform output jenkins_host) \
-  ../../packer/jenkins.json
-
-terraform apply
-```
-
 ### Application environment
 
 1. Create the Terraform variables file.
@@ -108,7 +106,7 @@ terraform apply
     cp terraform.tfvars.example terraform.tfvars
     ```
 
-1. Fill out [`terraform.tfvars`](terraform/terraform.tfvars.example).
+1. Fill out [`terraform.tfvars`](terraform/terraform.tfvars.example). This file *SHOULD NOT* be checked into source control.
 1. Set up Terraform.
 
     ```sh
@@ -123,35 +121,31 @@ terraform apply
 
     _NOTE: Ditto the [above](#management-environment) regarding circular dependency._
 
-1. Run the [deployment](#env-deployment) steps below.
+1. Run the steps below to create the Wordpress AMI. Note that this can be used for updating the Wordpress AMI in CI/CD later.
+    1. Build the AMI.
+
+        ```sh
+        packer build \
+        -var db_host=$(terraform output db_host) \
+        -var db_name=$(terraform output db_name) \
+        -var db_user=$(terraform output db_user) \
+        -var db_pass=$(terraform output db_pass) \
+        ../../packer/wordpress.json
+        ```
+
+    1. Deploy the latest AMI.
+
+        ```sh
+        terraform apply
+        ```
+
+Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
+
 1. Visit the setup page.
 
     ```sh
     open $(terraform output url)wp-admin/install.php
     ```
-
-#### env deployment
-
-For initial or subsequent deployment:
-
-1. Build the AMI.
-
-    ```sh
-    packer build \
-      -var db_host=$(terraform output db_host) \
-      -var db_name=$(terraform output db_name) \
-      -var db_user=$(terraform output db_user) \
-      -var db_pass=$(terraform output db_pass) \
-      ../../packer/wordpress.json
-    ```
-
-1. Deploy the latest AMI.
-
-    ```sh
-    terraform apply
-    ```
-
-Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
 
 #### Troubleshooting
 
