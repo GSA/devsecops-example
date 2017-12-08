@@ -43,13 +43,12 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform init
     terraform apply
     ```
-    NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique globally. If you get an error that the bucket name is not available, then your choice was not unique.
 
 1. Set up Terraform.
 
     ```sh
     cd ../mgmt
-    terraform init
+    terraform init "-backend-config=bucket=$(cd ../bootstrap && terraform output bucket)"
     ```
 
 1. Bootstrap the environment using Terraform.
