@@ -2,8 +2,8 @@ module "network" {
   source = "terraform-aws-modules/vpc/aws"
 
   azs = [
-    "${data.aws_region.current.name}a",
-    "${data.aws_region.current.name}b"
+    "${data.aws_region.current.name}${var.azs[0]}",
+    "${data.aws_region.current.name}${var.azs[1]}"
   ]
 
   name = "devsecops-example"
