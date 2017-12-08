@@ -147,3 +147,30 @@ To SSH into the running instance:
 ```sh
 ssh $(terraform output ssh_user)@$(terraform output public_ip)
 ```
+
+## Cleanup
+
+Once fully deployed, do the following to delete the project:
+
+1. Temporarily remove [all the `lifecycle` blocks from under `terraform/`](https://github.com/GSA/devsecops-example/search?q=lifecycle+in%3Aterraform).
+    * This is necessary because Terraform, as of v0.11.1, [doesn't allow these blocks to contain interpolation](https://github.com/hashicorp/terraform/issues/3116).
+1. Destroy the `env`.
+
+    ```sh
+    cd terraform/env
+    terraform destroy
+    ```
+
+1. Destroy `mgmt`.
+
+    ```sh
+    cd ../mgmt
+    terraform destroy
+    ```
+
+1. Destroy `bootstrap`.
+
+    ```sh
+    cd ../bootstrap
+    terraform destroy
+    ```
