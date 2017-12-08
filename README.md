@@ -62,6 +62,8 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform apply -target=aws_eip.jenkins
     ```
 
+    _NOTE: There is a circular dependency between the Terraform and Packer configurations. This workaround only creates the subset of the environment required for the AMI build._
+
 1. Create the Jenkins secrets.
     1. Create a secrets file. _Note that, for simplicity, we're putting the secrets in a file not checked into version control. A real project should put the secrets in a [Vault](https://docs.ansible.com/ansible/latest/vault.html)._
 
@@ -107,8 +109,7 @@ Currently, both the management and environment VPCs will be deployed in the same
 1. Set up Terraform.
 
     ```sh
-    export AWS_DEFAULT_REGION=us-east-2
-    terraform init
+    terraform init "-backend-config=bucket=$(cd ../mgmt && terraform output env_backend_bucket)"
     ```
 
 1. Run the [deployment](#deployment) steps below.
@@ -128,7 +129,7 @@ For initial or subsequent deployment:
     terraform apply -target=aws_route53_record.db
     ```
 
-    _NOTE: There is a circular dependency between the Terraform and Packer configurations. This workaround only creates the subset of the environment required for the AMI build._
+    _NOTE: Ditto the [above](#management-environment) regarding circular dependency._
 
 1. Build the AMI.
 
