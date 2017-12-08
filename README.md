@@ -73,16 +73,7 @@ Currently, both the management and environment VPCs will be deployed in the same
 
     1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
     1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)).
-1. Deploy Jenkins.
-
-    ```sh
-    packer build \
-      -var jenkins_host=$(terraform output jenkins_host) \
-      ../../packer/jenkins.json
-
-    terraform apply
-    ```
-
+1. Run the [deployment](#mgmt-deployment) steps below.
 1. Create the Jenkins pipeline.
     1. Visit [Blue Ocean](https://jenkins.io/projects/blueocean/) interface.
 
@@ -95,6 +86,18 @@ Currently, both the management and environment VPCs will be deployed in the same
     1. For the GitHub organization, select `GSA`.
     1. Select `New Pipeline`.
     1. Select this repository.
+
+#### mgmt deployment
+
+Run the following to deploy Jenkins or any other changes to `mgmt`.
+
+```sh
+packer build \
+  -var jenkins_host=$(terraform output jenkins_host) \
+  ../../packer/jenkins.json
+
+terraform apply
+```
 
 ### Application environment
 
@@ -112,17 +115,6 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform init "-backend-config=bucket=$(cd ../mgmt && terraform output env_backend_bucket)"
     ```
 
-1. Run the [deployment](#deployment) steps below.
-1. Visit the setup page.
-
-    ```sh
-    open $(terraform output url)wp-admin/install.php
-    ```
-
-## Deployment
-
-For initial or subsequent deployment:
-
 1. Bootstrap the environment using Terraform.
 
     ```sh
@@ -130,6 +122,17 @@ For initial or subsequent deployment:
     ```
 
     _NOTE: Ditto the [above](#management-environment) regarding circular dependency._
+
+1. Run the [deployment](#env-deployment) steps below.
+1. Visit the setup page.
+
+    ```sh
+    open $(terraform output url)wp-admin/install.php
+    ```
+
+#### env deployment
+
+For initial or subsequent deployment:
 
 1. Build the AMI.
 
@@ -150,9 +153,9 @@ For initial or subsequent deployment:
 
 Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
 
-## Troubleshooting
+#### Troubleshooting
 
-To SSH into the running instance:
+To SSH into the running WordPress instance:
 
 ```sh
 ssh $(terraform output ssh_user)@$(terraform output public_ip)
