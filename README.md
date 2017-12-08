@@ -35,10 +35,15 @@ Currently, both the management and environment VPCs will be deployed in the same
 
 ### Management environment
 
+1. Specify a region ([options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions)).
+
+    ```sh
+    export AWS_DEFAULT_REGION=...
+    ```
+
 1. Set up the Terraform backend.
 
     ```sh
-    export AWS_DEFAULT_REGION=us-east-2
     cd terraform/bootstrap
     terraform init
     terraform apply
