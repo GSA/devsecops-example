@@ -10,11 +10,13 @@ module "network" {
   public_subnets = ["${var.public_subnet_cidr}"]
 }
 
+# ensure uniqueness within an account
+resource "random_pet" "flow_logs" {}
+
 module "flow_logs" {
   source = "github.com/GSA/terraform-vpc-flow-log"
   vpc_id = "${module.network.vpc_id}"
-  # temporary, while working in a single account
-  prefix = "mgmt"
+  prefix = "mgmt-${random_pet.flow_logs.id}-"
 }
 
 data "aws_subnet" "public" {

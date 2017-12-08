@@ -101,7 +101,7 @@ Currently, both the management and environment VPCs will be deployed in the same
 1. Create the Terraform variables file.
 
     ```sh
-    cd terraform/env
+    cd ../env
     cp terraform.tfvars.example terraform.tfvars
     ```
 

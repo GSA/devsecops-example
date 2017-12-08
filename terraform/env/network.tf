@@ -16,9 +16,13 @@ module "network" {
   cidr = "${var.vpc_cidr}"
 }
 
+# ensure uniqueness within an account
+resource "random_pet" "flow_logs" {}
+
 module "flow_logs" {
   source = "github.com/GSA/terraform-vpc-flow-log"
   vpc_id = "${module.network.vpc_id}"
+  prefix = "env-${random_pet.flow_logs.id}-"
 }
 
 data "aws_subnet" "public" {
