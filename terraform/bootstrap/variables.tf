@@ -1,3 +1,3 @@
-variable "bucket" {
-  default = "devsecops-example-mgmt"
+variable "bucket_prefix" {
+  default = "devsecops-example-mgmt-"
 }

@@ -12,6 +12,7 @@ pipeline {
         docker { image 'hashicorp/terraform' }
       }
       environment {
+        // TODO make configurable
         AWS_DEFAULT_REGION = 'us-east-2'
       }
       steps {

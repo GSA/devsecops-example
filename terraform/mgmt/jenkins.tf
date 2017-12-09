@@ -37,8 +37,13 @@ module "jenkins_instances" {
 }
 
 resource "aws_eip" "jenkins" {
-  instance = "${module.jenkins_instances.instance_id}"
   vpc = true
+}
+
+# the association needs to be done outside of the aws_eip resource so that the EIP can be created independent of the corresponding instance
+resource "aws_eip_association" "jenkins" {
+  instance_id   = "${module.jenkins_instances.instance_id}"
+  allocation_id = "${aws_eip.jenkins.id}"
 }
 
 # https://tech.gogoair.com/immutable-jenkins-ae54e4a37a6a

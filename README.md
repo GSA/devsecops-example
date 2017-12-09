@@ -35,6 +35,12 @@ Currently, both the management and environment VPCs will be deployed in the same
 
 ### Management environment
 
+1. Specify a region ([options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions)).
+
+    ```sh
+    export AWS_DEFAULT_REGION=...
+    ```
+
 1. Set up the Terraform backend.
 
     ```sh
@@ -42,37 +48,43 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform init
     terraform apply
     ```
-    NOTE: You will need to replace your bucket name with something unique, because bucket names must be unique globally. If you get an error that the bucket name is not available, then your choice was not unique.
 
-1. Set up environment using Terraform.
+1. Set up Terraform.
 
     ```sh
     cd ../mgmt
-    export AWS_DEFAULT_REGION=us-east-2
-    terraform init
-    terraform apply
+    terraform init "-backend-config=bucket=$(cd ../bootstrap && terraform output bucket)"
     ```
 
-1. Create the Jenkins secrets.
-    1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
-    1. Create a secrets file.
-
-        ```sh
-        cp ../ansible/group_vars/jenkins/secrets.yml.example ../ansible/group_vars/jenkins/secrets.yml
-        ```
-
-    1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)).
-1. Deploy Jenkins.
+1. Bootstrap the environment using Terraform.
 
     ```sh
-    packer build \
-      -var jenkins_host=$(terraform output jenkins_host) \
-      ../../packer/jenkins.json
-
-    terraform apply
+    terraform apply -target=aws_eip.jenkins
     ```
 
-1. Create the Jenkins pipeline.
+    _NOTE: There is a circular dependency between the Terraform and Packer configurations. This workaround only creates the subset of the environment required for the AMI build._
+
+1. Create the Jenkins secrets.
+    1. Create a secrets file. _Note that, for simplicity, we're putting the secrets in a file not checked into version control. A real project should put the secrets in a [Vault](https://docs.ansible.com/ansible/latest/vault.html)._
+
+        ```sh
+        cp ../../ansible/group_vars/jenkins/secrets.yml.example ../../ansible/group_vars/jenkins/secrets.yml
+        ```
+
+    1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
+    1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)). This file SHOULD BE VAULTED with [ansible-vault](https://docs.ansible.com/ansible/2.4/vault.html).
+1. Run the deployment steps. These steps can be used later to create a new packer build of the jenkins AMI.
+    1. Run the following to deploy Jenkins or any other changes to `mgmt`.
+
+        ```sh
+        packer build \
+        -var jenkins_host=$(terraform output jenkins_host) \
+        ../../packer/jenkins.json
+
+        terraform apply
+        ```
+
+1. Create the Jenkins pipeline. Note that you will have to login to Jenkins first, using the password specified in the secrets.yml file.
     1. Visit [Blue Ocean](https://jenkins.io/projects/blueocean/) interface.
 
         ```sh
@@ -90,28 +102,16 @@ Currently, both the management and environment VPCs will be deployed in the same
 1. Create the Terraform variables file.
 
     ```sh
-    cd terraform/env
+    cd ../env
     cp terraform.tfvars.example terraform.tfvars
     ```
 
-1. Fill out [`terraform.tfvars`](terraform/terraform.tfvars.example).
-1. Set up environment using Terraform.
+1. Fill out [`terraform.tfvars`](terraform/terraform.tfvars.example). This file *SHOULD NOT* be checked into source control.
+1. Set up Terraform.
 
     ```sh
-    export AWS_DEFAULT_REGION=us-east-2
-    terraform init
+    terraform init "-backend-config=bucket=$(cd ../mgmt && terraform output env_backend_bucket)"
     ```
-
-1. Run the [deployment](#deployment) steps below.
-1. Visit the setup page.
-
-    ```sh
-    open $(terraform output url)wp-admin/install.php
-    ```
-
-## Deployment
-
-For initial or subsequent deployment:
 
 1. Bootstrap the environment using Terraform.
 
@@ -119,30 +119,37 @@ For initial or subsequent deployment:
     terraform apply -target=aws_route53_record.db
     ```
 
-    _NOTE: There is a circular dependency between the Terraform and Packer configurations. This workaround only creates the subset of the environment required for the AMI build._
+    _NOTE: Ditto the [above](#management-environment) regarding circular dependency._
 
-1. Build the AMI.
+1. Run the steps below to create the Wordpress AMI. Note that this can be used for updating the Wordpress AMI in CI/CD later.
+    1. Build the AMI.
 
-    ```sh
-    packer build \
-      -var db_host=$(terraform output db_host) \
-      -var db_name=$(terraform output db_name) \
-      -var db_user=$(terraform output db_user) \
-      -var db_pass=$(terraform output db_pass) \
-      ../../packer/wordpress.json
-    ```
+        ```sh
+        packer build \
+        -var db_host=$(terraform output db_host) \
+        -var db_name=$(terraform output db_name) \
+        -var db_user=$(terraform output db_user) \
+        -var db_pass=$(terraform output db_pass) \
+        ../../packer/wordpress.json
+        ```
 
-1. Deploy the latest AMI.
+    1. Deploy the latest AMI.
 
-    ```sh
-    terraform apply
-    ```
+        ```sh
+        terraform apply
+        ```
 
 Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
 
-## Troubleshooting
+1. Visit the setup page.
 
-To SSH into the running instance:
+    ```sh
+    open $(terraform output url)wp-admin/install.php
+    ```
+
+#### Troubleshooting
+
+To SSH into the running WordPress instance:
 
 ```sh
 ssh $(terraform output ssh_user)@$(terraform output public_ip)

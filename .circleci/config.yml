@@ -34,6 +34,7 @@ jobs:
     docker:
       - image: hashicorp/terraform
         environment:
+          # arbitrary region
           AWS_DEFAULT_REGION: us-east-2
     steps:
       - checkout

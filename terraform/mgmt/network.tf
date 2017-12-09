@@ -1,8 +1,8 @@
 module "network" {
   source = "terraform-aws-modules/vpc/aws"
+  version = "~> 1.0"
 
-  # somewhat arbitrary - the later in the alphabet, the newer, which seems to provision faster
-  azs = ["${data.aws_region.current.name}c"]
+  azs = ["${data.aws_region.current.name}${var.az}"]
   cidr = "${var.vpc_cidr}"
   enable_dns_hostnames = true
   enable_dns_support = true
@@ -11,11 +11,13 @@ module "network" {
   public_subnets = ["${var.public_subnet_cidr}"]
 }
 
+# ensure uniqueness within an account
+resource "random_pet" "flow_logs" {}
+
 module "flow_logs" {
   source = "github.com/GSA/terraform-vpc-flow-log"
   vpc_id = "${module.network.vpc_id}"
-  # temporary, while working in a single account
-  prefix = "mgmt"
+  prefix = "mgmt-${random_pet.flow_logs.id}-"
 }
 
 data "aws_subnet" "public" {

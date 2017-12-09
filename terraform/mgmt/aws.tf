@@ -4,7 +4,6 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "devsecops-example-mgmt"
     key = "terraform/mgmt.tfstate"
   }
 }
