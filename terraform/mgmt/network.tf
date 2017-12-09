@@ -1,5 +1,6 @@
 module "network" {
   source = "terraform-aws-modules/vpc/aws"
+  version = "~> 1.0"
 
   azs = ["${data.aws_region.current.name}${var.az}"]
   cidr = "${var.vpc_cidr}"

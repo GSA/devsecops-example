@@ -1,5 +1,7 @@
 module "network" {
   source = "terraform-aws-modules/vpc/aws"
+  # broken by https://github.com/terraform-aws-modules/terraform-aws-vpc/pull/36
+  version = ">= 1.0.0, < 1.8.0"
 
   azs = [
     "${data.aws_region.current.name}${var.azs[0]}",
