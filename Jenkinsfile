@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
 
   triggers {
     // every minute
@@ -32,6 +32,11 @@ pipeline {
         // bootstrap the environment with the resources requried for Packer
         sh 'cd terraform/env && terraform apply -input=false -auto-approve -target=aws_route53_record.db'
       }
+    }
+  }
+  post {
+    always {
+      cleanWs()
     }
   }
 }
