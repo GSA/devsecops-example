@@ -14,4 +14,6 @@ module "os_monitoring" {
   sns_topic_arn = "${module.alerting.sns_topic_arn}"
   high_cpu_threshold = "${var.high_cpu_wordpress_alarm_threshold}"
   high_memory_threshold = "${var.high_memory_wordpress_alarm_threshold}"
+  high_disk_util_threshold = "${var.high_disk_util_wordpress_alarm_threshold}"
 }
+

@@ -19,3 +19,8 @@ variable "high_cpu_threshold" {
 variable "sns_topic_arn" {
   type = "string"
 }
+
+variable "high_disk_util_threshold" {
+  description = "Percent of disk utilized to alarm on an instance"
+  default = "85"
+}

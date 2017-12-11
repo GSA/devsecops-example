@@ -61,3 +61,9 @@ variable "high_memory_wordpress_alarm_threshold" {
   description = "Percent memory threshold for alarm on Wordpress instance"
   default = "80"
 }
+
+variable "high_disk_util_wordpress_alarm_threshold" {
+  type = "string"
+  description = "Percent disk utilization threshold for alarm on Wordpress instance"
+  default = "85"
+}
