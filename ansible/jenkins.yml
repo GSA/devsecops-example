@@ -3,4 +3,6 @@
   become: true
   roles:
     - ansible-os-rhel-7
+    # there's some issue with hardening where the server needs to be restarted before services can be run successfully
+    - GROG.reboot
     - gsa.jenkins
