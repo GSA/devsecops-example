@@ -1,6 +1,7 @@
 module "network" {
   source = "terraform-aws-modules/vpc/aws"
-  version = "~> 1.0"
+  # Newest v1.11.0 released 12/11/17 fixes additional private subnet issue.
+  version = ">= 1.11.0"
 
   azs = ["${data.aws_region.current.name}${var.az}"]
   cidr = "${var.vpc_cidr}"
