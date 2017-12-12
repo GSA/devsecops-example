@@ -11,6 +11,7 @@
   roles:
     - ansible-os-ubuntu-16
     - role: cristian04.cloudwatch-monitoring
+    # CloudWatch basic monitoring uses 5 minute intervals. Enhanced monitoring supports up to 1 minute intervals, but results in extra charges.
       cron_specs:
         - name: "Cloudwatch monitoring"
           minute: "*/5"
