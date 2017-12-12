@@ -3,4 +3,5 @@
 - src: https://github.com/GSA/ansible-os-rhel-7
 - src: https://github.com/GSA/jenkins-deploy
   name: gsa.jenkins
+- src: cristian04.cloudwatch-monitoring
 - src: GROG.reboot

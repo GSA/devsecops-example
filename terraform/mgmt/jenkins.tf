@@ -14,7 +14,7 @@ data "aws_ami" "jenkins" {
 
   filter {
     name = "name"
-    values = ["jenkins *"]
+    values = ["jenkins*"]
   }
 
   owners = ["self"]
