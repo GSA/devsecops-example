@@ -1,0 +1,2 @@
+env_backend_bucket_prefix = "devsecops-example-env-<username>-"
+general_availability_endpoint = "something@gsa.gov"

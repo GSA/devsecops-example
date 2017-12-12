@@ -51,10 +51,17 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform apply
     ```
 
-1. Set up Terraform.
+1. Create the Terraform variables file.
 
     ```sh
     cd ../mgmt
+    cp terraform.tfvars.example terraform.tfvars
+    ```
+
+1. Fill out [`terraform.tfvars`](terraform/mgmt/terraform.tfvars.example). This file *SHOULD NOT* be checked into source control.
+1. Set up Terraform.
+
+    ```sh
     terraform init "-backend-config=bucket=$(cd ../bootstrap && terraform output bucket)"
     ```
 
@@ -108,7 +115,7 @@ Currently, both the management and environment VPCs will be deployed in the same
     cp terraform.tfvars.example terraform.tfvars
     ```
 
-1. Fill out [`terraform.tfvars`](terraform/terraform.tfvars.example). This file *SHOULD NOT* be checked into source control.
+1. Fill out [`terraform.tfvars`](terraform/env/terraform.tfvars.example). This file *SHOULD NOT* be checked into source control.
 1. Set up Terraform.
 
     ```sh

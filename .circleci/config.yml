@@ -53,6 +53,9 @@ jobs:
           command: cd terraform/bootstrap && terraform validate
 
       - run:
+          name: mgmt - Create Terraform variables file
+          command: cd terraform/mgmt && cp terraform.tfvars.example terraform.tfvars
+      - run:
           name: mgmt - Set up Terraform
           command: cd terraform/mgmt && terraform init -backend=false
       - run:
