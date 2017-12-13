@@ -51,19 +51,16 @@ variable "general_availability_endpoint" {
 }
 
 variable "high_cpu_wordpress_alarm_threshold" {
-  type = "string"
   description = "Percent CPU threshold for alarm on Wordpress instance"
   default = "80"
 }
 
 variable "high_memory_wordpress_alarm_threshold" {
-  type = "string"
   description = "Percent memory threshold for alarm on Wordpress instance"
   default = "80"
 }
 
 variable "high_disk_util_wordpress_alarm_threshold" {
-  type = "string"
   description = "Percent disk utilization threshold for alarm on Wordpress instance"
   default = "85"
 }

@@ -4,7 +4,7 @@ variable "sns_general_availability_topic_name" {
 
 variable "general_availability_protocol" {
   default = "email"
-  description = "See '--protocol' options under https://docs.aws.amazon.com/cli/latest/reference/sns/subscribe.html#options"
+  description = "See '--protocol' options under https://docs.aws.amazon.com/cli/latest/reference/sns/subscribe.html#options. SMS not supported in all regions: https://docs.aws.amazon.com/sns/latest/dg/sms_supported-countries.html"
 }
 
 variable "general_availability_endpoint" {
