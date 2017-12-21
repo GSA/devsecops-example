@@ -1,0 +1,7 @@
+---
+cloudwatch_cron_specs:
+  - name: "Cloudwatch monitoring"
+    # CloudWatch basic monitoring uses 5 minute intervals. Enhanced monitoring supports up to 1 minute intervals, but results in extra charges.
+    minute: "*/5"
+    hour: "*"
+    job: "{{ cloud_watch_monitoring_path }}/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-used --mem-avail --swap-util --swap-used --disk-space-util --disk-path={{ path }} --disk-space-avail --from-cron"
