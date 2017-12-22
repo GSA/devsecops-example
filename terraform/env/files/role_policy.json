@@ -8,7 +8,8 @@
         "cloudwatch:PutMetricData",
         "cloudwatch:GetMetricStatistics",
         "cloudwatch:ListMetrics",
-        "ec2:DescribeTags"
+        "ec2:DescribeTags",
+        "ssm:*"
       ],
       "Resource": "*"
     }

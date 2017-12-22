@@ -7,3 +7,7 @@ resource "aws_s3_bucket" "env_backend" {
     enabled = true
   }
 }
+
+resource "aws_s3_bucket" "ssm_jenkins_patch_log_bucket" {
+  bucket_prefix = "jenkins-patch-log-"
+}

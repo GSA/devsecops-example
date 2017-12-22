@@ -2,9 +2,11 @@
 - hosts: jenkins
   become: true
   roles:
-    - ansible-os-rhel-7
-    # there's some issue with hardening where the server needs to be restarted before services can be run successfully
-    - GROG.reboot
+    # - ansible-os-rhel-7
+    # # there's some issue with hardening where the server needs to be restarted before services can be run successfully
+    # - role: GROG.reboot
+    #   reboot_wait: 'yes'
+    #   reboot_interval_seconds: '30'
     - gsa.jenkins
     - dhoeric.aws-ssm
     - role: cristian04.cloudwatch-monitoring
