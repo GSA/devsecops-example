@@ -16,11 +16,9 @@
     "region": "{{user `region`}}",
     "source_ami_filter": {
       "filters": {
-        "virtualization-type": "hvm",
-        "name": "RHEL-7.4_HVM_GA-*",
-        "root-device-type": "ebs"
+        "name": "rhel7-base-*"
       },
-      "owners": ["309956199498"],
+      "owners": ["self"],
       "most_recent": true
     },
     "instance_type": "t2.micro",

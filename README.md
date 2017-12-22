@@ -43,6 +43,7 @@ Currently, both the management and environment VPCs will be deployed in the same
     export AWS_DEFAULT_REGION=...
     ```
 
+1. [Create the base AMIs](https://github.com/GSA/security-benchmarks#base-images), if they aren't shared with your AWS account already.
 1. Set up the Terraform backend.
 
     ```sh

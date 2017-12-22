@@ -1,6 +1,4 @@
 ---
-- include: install_python.yml
-
 - hosts: all
   become: true
   vars:
@@ -8,11 +6,6 @@
     apache_group: "{{ apache_user }}"
     wp_install_dir: /usr/share/wordpress
     wp_content_dir: "{{ wp_install_dir }}/wp-content"
-  roles:
-    - ansible-os-ubuntu-16
-    - role: cristian04.cloudwatch-monitoring
-      cron_specs: "{{ cloudwatch_cron_specs }}"
-
   tasks:
 
     # based on
