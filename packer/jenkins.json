@@ -7,7 +7,7 @@
     {
       "type": "shell",
       "inline": ["sudo yum install -y perl-Digest-SHA.x86_64"]
-    }
+    },
     {
       "type": "ansible",
       "playbook_file": "../../ansible/jenkins.yml",
