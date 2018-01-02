@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  ansible:
+  install_ansible_roles:
     docker:
       - image: williamyeh/ansible:alpine3
     steps:
@@ -16,7 +16,7 @@ jobs:
           paths:
             - ./*
 
-  packer:
+  validate_packer:
     docker:
       - image: hashicorp/packer
     steps:
@@ -28,12 +28,9 @@ jobs:
           name: Validate WordPress template
           command: packer validate -syntax-only packer/wordpress.json
 
-  terraform:
+  validate_terraform:
     docker:
       - image: hashicorp/terraform
-        environment:
-          # arbitrary region
-          AWS_DEFAULT_REGION: us-east-2
     steps:
       - attach_workspace:
           at: .
@@ -68,14 +65,33 @@ jobs:
       - run:
           name: env - Validate Terraform
           command: cd terraform/env && terraform validate
+      - persist_to_workspace:
+          root: .
+          paths:
+            - terraform/env/.terraform/*
+
+  bootstrap_env:
+    docker:
+      - image: hashicorp/terraform
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Bootstrap the environment
+          command: cd terraform/env && terraform apply -input=false -auto-approve -target=aws_route53_record.db
 
 workflows:
   version: 2
 
-  validate:
+  validate_and_deploy:
     jobs:
-      - ansible
-      - packer
-      - terraform:
+      - install_ansible_roles
+      - validate_packer
+      - validate_terraform:
           requires:
-            - ansible
+            - install_ansible_roles
+      - bootstrap_env:
+          # TODO master branch only? https://circleci.com/docs/2.0/workflows/#branch-level-job-execution
+          requires:
+            - validate_terraform

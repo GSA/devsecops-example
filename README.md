@@ -108,28 +108,7 @@ Currently, both the management and environment VPCs will be deployed in the same
 
 ### Application environment
 
-1. Create the Terraform variables file.
-
-    ```sh
-    cd ../env
-    cp terraform.tfvars.example terraform.tfvars
-    ```
-
-1. Fill out [`terraform.tfvars`](terraform/env/terraform.tfvars.example). This file *SHOULD NOT* be checked into source control.
-1. Set up Terraform.
-
-    ```sh
-    terraform init "-backend-config=bucket=$(cd ../mgmt && terraform output env_backend_bucket)"
-    ```
-
-1. Bootstrap the environment using Terraform.
-
-    ```sh
-    terraform apply -target=aws_route53_record.db
-    ```
-
-    _NOTE: Ditto the [above](#management-environment) regarding circular dependency._
-
+1. Set up CircleCI for the project, which will bootstrap the environment.
 1. Run the steps below to create the Wordpress AMI. Note that this can be used for updating the Wordpress AMI in CI/CD later.
     1. Build the AMI.
 
