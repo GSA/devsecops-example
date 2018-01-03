@@ -6,6 +6,10 @@
   vars:
     apache_user: www-data
     apache_group: "{{ apache_user }}"
+
+    deployer_username: deployer
+    deployer_public_key: "{{ lookup('file', 'deployer.pub') }}"
+
     wp_install_dir: /usr/share/wordpress
     wp_content_dir: "{{ wp_install_dir }}/wp-content"
   roles:
@@ -68,3 +72,17 @@
       systemd:
         name: apache2
         state: restarted
+
+    - name: Create deployer
+      user:
+        name: "{{ deployer_username }}"
+        group: wheel
+
+    - name: Disable password aging for deployer
+      command: chage -M 99999 "{{ deployer_username }}"
+      changed_when: False
+
+    - name: Allow SSH from the deployer
+      authorized_key:
+        user: "{{ deployer_username }}"
+        key: "{{ deployer_public_key }}"
