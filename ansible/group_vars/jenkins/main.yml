@@ -1,3 +1,0 @@
----
-# while this may be more risky in a long-running server, we want the latest Jenkins/plugins when deploying immutably
-jenkins_plugins_state: latest

@@ -22,9 +22,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Validate Jenkins template
-          command: packer validate -syntax-only packer/jenkins.json
-      - run:
           name: Validate WordPress template
           command: packer validate -syntax-only packer/wordpress.json
 
