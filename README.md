@@ -108,7 +108,10 @@ Currently, both the management and environment VPCs will be deployed in the same
 
 ### Application environment
 
-1. Set up CircleCI for the project, which will bootstrap the environment.
+1. [Create an access key for the deployer user.](https://console.aws.amazon.com/iam/home#/users/circleci-deployer?section=security_credentials)
+1. Set up CircleCI for the project.
+    * Specify [the required AWS environment variables](https://www.terraform.io/docs/providers/aws/index.html#environment-variables) [in the CircleCI project](https://circleci.com/docs/2.0/env-vars/#adding-environment-variables-in-the-app).
+    * The build will bootstrap the environment.
 1. Run the steps below to create the Wordpress AMI. Note that this can be used for updating the Wordpress AMI in CI/CD later.
     1. Build the AMI.
 
