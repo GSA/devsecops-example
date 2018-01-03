@@ -1,3 +1,4 @@
+# TODO remove
 # avoid name conflicts - ensure multiple copies of the same role can exist in the same AWS account
 resource "random_id" "jenkins_iam_role_suffix" {
   byte_length = 8
