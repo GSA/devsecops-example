@@ -91,6 +91,13 @@ jobs:
           working_directory: ~/project/terraform/env
 
       - run:
+          name: Generate SSH key
+          command: |
+            ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -C "devsecops-core+circleci@gsa.gov" -N ""
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/id_rsa
+
+      - run:
           name: Deploy the full environment
           command: terraform apply -input=false -auto-approve
           working_directory: ~/project/terraform/env
