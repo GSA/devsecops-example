@@ -18,7 +18,7 @@ jobs:
 
   validate_packer:
     docker:
-      - image: hashicorp/packer
+      - image: hashicorp/packer:light
     steps:
       - checkout
       - run:
@@ -30,7 +30,7 @@ jobs:
 
   validate_terraform:
     docker:
-      - image: hashicorp/terraform
+      - image: hashicorp/terraform:light
     steps:
       - attach_workspace:
           at: .
