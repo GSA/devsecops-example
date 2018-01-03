@@ -124,7 +124,7 @@ Currently, both the management and environment VPCs will be deployed in the same
         -var db_host=$(terraform output db_host) \
         -var db_name=$(terraform output db_name) \
         -var db_user=$(terraform output db_user) \
-        -var db_pass=$(terraform output db_pass) \
+        -var "db_pass=${TF_VAR_db_pass}" \
         ../../packer/wordpress.json
         ```
 

@@ -57,9 +57,6 @@ jobs:
           command: cd terraform/mgmt && terraform validate
 
       - run:
-          name: env - Create Terraform variables file
-          command: cd terraform/env && cp terraform.tfvars.example terraform.tfvars
-      - run:
           name: env - Set up Terraform
           command: cd terraform/env && terraform init "-backend-config=bucket=$TF_ENV_BUCKET"
       - run:
