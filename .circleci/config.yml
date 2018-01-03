@@ -69,7 +69,7 @@ jobs:
 
   deploy_env:
     docker:
-      - image: 18fgsa/devsecops-builder
+      - image: 18fgsa/devsecops-builder:alpine
     steps:
       - attach_workspace:
           at: .
