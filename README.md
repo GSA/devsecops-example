@@ -113,6 +113,8 @@ Currently, both the management and environment VPCs will be deployed in the same
     * [Specify environment variables](https://circleci.com/docs/2.0/env-vars/#adding-environment-variables-in-the-app):
         * [The required AWS configuration](https://www.terraform.io/docs/providers/aws/index.html#environment-variables)
         * `TF_ENV_BUCKET` - get via `terraform output env_backend_bucket`
+        * `TF_VAR_db_pass`
+        * `TF_VAR_general_availability_endpoint`
     * The build will bootstrap the environment.
 1. Run the steps below to create the Wordpress AMI. Note that this can be used for updating the Wordpress AMI in CI/CD later.
     1. Build the AMI.
