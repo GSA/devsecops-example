@@ -115,6 +115,14 @@ Currently, both the management and environment VPCs will be deployed in the same
         * `TF_ENV_BUCKET` - get via `terraform output env_backend_bucket`
         * `TF_VAR_db_pass`
         * `TF_VAR_general_availability_endpoint`
+    * Generate a deployer key, and add it under the project settings.
+        * Generate using:
+
+            ```sh
+            ssh-keygen -t rsa -b 4096 -f id_rsa_circleci -C "something@some.gov" -N ""
+            cat id_rsa_circleci | pbcopy
+            ```
+
     * The build will bootstrap the environment.
 
 Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.

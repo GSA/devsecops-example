@@ -1,3 +1,5 @@
+id_rsa*
+
 # Packer
 *.pem
 

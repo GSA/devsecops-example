@@ -74,6 +74,11 @@ jobs:
       - attach_workspace:
           at: .
 
+      - add_ssh_keys
+      - run:
+          name: Disable host key checking
+          command: printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
+
       - run:
           name: Bootstrap the environment
           command: terraform apply -input=false -auto-approve -target=aws_route53_record.db
@@ -89,13 +94,6 @@ jobs:
               -var "db_pass=${TF_VAR_db_pass}" \
               ../../packer/wordpress.json
           working_directory: ~/project/terraform/env
-
-      - run:
-          name: Generate SSH key
-          command: |
-            ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -C "devsecops-core+circleci@gsa.gov" -N ""
-            eval "$(ssh-agent -s)"
-            ssh-add ~/.ssh/id_rsa
 
       - run:
           name: Deploy the full environment
