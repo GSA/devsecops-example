@@ -82,9 +82,6 @@ jobs:
       - run:
           name: Build WordPress AMI
           command: |
-            # packer requires the USER environment variable to be set
-            # https://github.com/hashicorp/packer/pull/5758
-            export USER=$(whoami)
             packer build \
               -var db_host=$(terraform output db_host) \
               -var db_name=$(terraform output db_name) \
