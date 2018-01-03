@@ -64,3 +64,8 @@ variable "high_disk_util_wordpress_alarm_threshold" {
   description = "Percent disk utilization threshold for alarm on Wordpress instance"
   default = "85"
 }
+
+variable "deployer_public_key_path" {
+  default = ""
+  description = "Path to a public key to use for deployment. Defaults to the public key checked into the repository."
+}

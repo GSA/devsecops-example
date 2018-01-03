@@ -5,7 +5,7 @@
     "db_user": null,
     "db_pass": null,
     "region": "{{env `AWS_DEFAULT_REGION`}}",
-    "ssh_username": "deployer"
+    "ssh_username": "ubuntu"
   },
   "provisioners": [
     {

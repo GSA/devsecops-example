@@ -1,3 +1,8 @@
+resource "aws_key_pair" "deployer" {
+  key_name_prefix = "deployer-key"
+  public_key = "${var.deployer_public_key_path == "" ? file("${path.module}/files/deployer.pub") : var.deployer_public_key_path}"
+}
+
 data "aws_ami" "wordpress" {
   most_recent = true
 
@@ -14,6 +19,7 @@ resource "aws_instance" "wordpress" {
   instance_type = "t2.micro"
   subnet_id = "${data.aws_subnet.public.id}"
   vpc_security_group_ids = ["${aws_security_group.wordpress_ec2.id}"]
+  key_name = "${aws_key_pair.deployer.key_name}"
   iam_instance_profile = "${module.wordpress_role.profile_name}"
 
   tags {
