@@ -116,23 +116,6 @@ Currently, both the management and environment VPCs will be deployed in the same
         * `TF_VAR_db_pass`
         * `TF_VAR_general_availability_endpoint`
     * The build will bootstrap the environment.
-1. Run the steps below to create the Wordpress AMI. Note that this can be used for updating the Wordpress AMI in CI/CD later.
-    1. Build the AMI.
-
-        ```sh
-        packer build \
-        -var db_host=$(terraform output db_host) \
-        -var db_name=$(terraform output db_name) \
-        -var db_user=$(terraform output db_user) \
-        -var "db_pass=${TF_VAR_db_pass}" \
-        ../../packer/wordpress.json
-        ```
-
-    1. Deploy the latest AMI.
-
-        ```sh
-        terraform apply
-        ```
 
 Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
 
@@ -148,6 +131,15 @@ To SSH into the running WordPress instance:
 
 ```sh
 ssh $(terraform output ssh_user)@$(terraform output public_ip)
+```
+
+## Build container
+
+Part of the build runs in [a custom container](https://hub.docker.com/r/18fgsa/devsecops-builder/). To update it:
+
+```sh
+docker build --pull -t 18fgsa/devsecops-builder - < Dockerfile
+docker push 18fgsa/devsecops-builder
 ```
 
 ## Cleanup

@@ -67,16 +67,33 @@ jobs:
           paths:
             - terraform/env/.terraform/*
 
-  bootstrap_env:
+  deploy_env:
     docker:
-      - image: hashicorp/terraform
+      - image: 18fgsa/devsecops-builder
     steps:
       - attach_workspace:
           at: .
 
       - run:
           name: Bootstrap the environment
-          command: cd terraform/env && terraform apply -input=false -auto-approve -target=aws_route53_record.db
+          command: terraform apply -input=false -auto-approve -target=aws_route53_record.db
+          working_directory: ~/project/terraform/env
+
+      - run:
+          name: Build WordPress AMI
+          command: |
+            packer build \
+              -var db_host=$(terraform output db_host) \
+              -var db_name=$(terraform output db_name) \
+              -var db_user=$(terraform output db_user) \
+              -var "db_pass=${TF_VAR_db_pass}" \
+              ../../packer/wordpress.json
+          working_directory: ~/project/terraform/env
+
+      - run:
+          name: Deploy the full environment
+          command: terraform apply -input=false -auto-approve
+          working_directory: ~/project/terraform/env
 
 workflows:
   version: 2
@@ -88,7 +105,7 @@ workflows:
       - validate_terraform:
           requires:
             - install_ansible_roles
-      - bootstrap_env:
+      - deploy_env:
           # TODO master branch only? https://circleci.com/docs/2.0/workflows/#branch-level-job-execution
           requires:
             - validate_terraform
