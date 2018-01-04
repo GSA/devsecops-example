@@ -28,7 +28,7 @@ Currently, both the management and environment VPCs will be deployed in the same
 1. Install additional dependencies:
     * [Ansible](https://docs.ansible.com/ansible/latest/intro_installation.html)
     * [Packer](https://www.packer.io/)
-    * [Terraform](https://www.terraform.io/)
+    * [Terraform](https://www.terraform.io/) 0.11.0+
 1. Install Ansible dependencies.
 
     ```sh
