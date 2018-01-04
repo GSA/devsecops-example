@@ -20,11 +20,9 @@
     "region": "{{user `region`}}",
     "source_ami_filter": {
       "filters": {
-        "virtualization-type": "hvm",
-        "name": "*ubuntu-xenial-16.04-amd64-server-*",
-        "root-device-type": "ebs"
+        "name": "ubuntu16-base-*"
       },
-      "owners": ["099720109477"],
+      "owners": ["self"],
       "most_recent": true
     },
     "instance_type": "t2.micro",
