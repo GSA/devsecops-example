@@ -116,22 +116,20 @@ Currently, both the management and environment VPCs will be deployed in the same
         * `TF_VAR_db_pass`
         * `TF_VAR_general_availability_endpoint`
     * Generate a deployer key, and add it under the project settings.
-        * Generate using:
 
-            ```sh
-            ssh-keygen -t rsa -b 4096 -f id_rsa_circleci -C "something@some.gov" -N ""
-            cat id_rsa_circleci | pbcopy
-            ```
+        ```sh
+        ssh-keygen -t rsa -b 4096 -f id_rsa_circleci -C "something@some.gov" -N ""
+        cat id_rsa_circleci | pbcopy
+
+        # save as private key in CircleCI
+
+        rm id_rsa_circleci*
+        ```
 
     * The build will bootstrap the environment.
+1. Visit the site, which is the `url` output from Terraform at the end of the CircleCI run, to complete WordPress setup.
 
 Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
-
-1. Visit the setup page.
-
-    ```sh
-    open $(terraform output url)wp-admin/install.php
-    ```
 
 #### Troubleshooting
 
