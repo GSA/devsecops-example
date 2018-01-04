@@ -18,10 +18,6 @@ output "db_user" {
   value = "${aws_db_instance.wordpress.username}"
 }
 
-output "db_pass" {
-  value = "${aws_db_instance.wordpress.password}"
-}
-
 output "url" {
   value = "http://${aws_eip.public.public_ip}/blog/"
 }

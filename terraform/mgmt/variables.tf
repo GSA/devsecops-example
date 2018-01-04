@@ -51,3 +51,8 @@ variable "high_disk_util_jenkins_alarm_threshold" {
   description = "Percent disk utilization threshold for alarm on Wordpress instance"
   default = "85"
 }
+
+variable "deployer_username" {
+  default = "circleci-deployer"
+  description = "Username for the AWS IAM user"
+}

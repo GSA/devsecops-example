@@ -23,8 +23,7 @@
         "route53:*",
         "route53domains:*",
         "s3:*",
-        "sns:ListSubscriptionsByTopic",
-        "sns:ListTopics"
+        "sns:*"
       ],
       "Resource": "*"
     }

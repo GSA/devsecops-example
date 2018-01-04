@@ -1,6 +1,6 @@
 resource "aws_key_pair" "deployer" {
   key_name_prefix = "deployer-key"
-  public_key = "${file("~/.ssh/id_rsa.pub")}"
+  public_key = "${var.deployer_public_key_path == "" ? file("${path.module}/files/deployer.pub") : var.deployer_public_key_path}"
 }
 
 data "aws_ami" "wordpress" {

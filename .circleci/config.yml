@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  ansible:
+  install_ansible_roles:
     docker:
       - image: williamyeh/ansible:alpine3
     steps:
@@ -12,15 +12,13 @@ jobs:
           name: Download Ansible dependencies
           command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
       - persist_to_workspace:
-          # doesn't allow the full directory to be persisted, so only save the roles
-          # https://circleci.com/docs/2.0/configuration-reference/#persist_to_workspace
-          root: ansible/roles
+          root: .
           paths:
             - ./*
 
-  packer:
+  validate_packer:
     docker:
-      - image: hashicorp/packer
+      - image: hashicorp/packer:light
     steps:
       - checkout
       - run:
@@ -30,16 +28,12 @@ jobs:
           name: Validate WordPress template
           command: packer validate -syntax-only packer/wordpress.json
 
-  terraform:
+  validate_terraform:
     docker:
-      - image: hashicorp/terraform
-        environment:
-          # arbitrary region
-          AWS_DEFAULT_REGION: us-east-2
+      - image: hashicorp/terraform:light
     steps:
-      - checkout
       - attach_workspace:
-          at: ansible/roles
+          at: .
 
       - run:
           name: Create fake SSH public key
@@ -63,22 +57,65 @@ jobs:
           command: cd terraform/mgmt && terraform validate
 
       - run:
-          name: env - Create Terraform variables file
-          command: cd terraform/env && cp terraform.tfvars.example terraform.tfvars
-      - run:
           name: env - Set up Terraform
-          command: cd terraform/env && terraform init -backend=false
+          command: cd terraform/env && terraform init "-backend-config=bucket=$TF_ENV_BUCKET"
       - run:
           name: env - Validate Terraform
           command: cd terraform/env && terraform validate
+      - persist_to_workspace:
+          root: .
+          paths:
+            - terraform/env/.terraform/*
+
+  deploy_env:
+    docker:
+      - image: 18fgsa/devsecops-builder:alpine
+    steps:
+      - attach_workspace:
+          at: .
+
+      - add_ssh_keys
+      - run:
+          name: Disable host key checking
+          command: printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
+
+      - run:
+          name: Bootstrap the environment
+          command: terraform apply -input=false -auto-approve -target=aws_route53_record.db
+          working_directory: ~/project/terraform/env
+
+      - run:
+          name: Build WordPress AMI
+          command: |
+            packer build \
+              -var db_host=$(terraform output db_host) \
+              -var db_name=$(terraform output db_name) \
+              -var db_user=$(terraform output db_user) \
+              -var "db_pass=${TF_VAR_db_pass}" \
+              ../../packer/wordpress.json
+          working_directory: ~/project/terraform/env
+
+      - run:
+          name: Deploy the full environment
+          command: terraform apply -input=false -auto-approve
+          working_directory: ~/project/terraform/env
 
 workflows:
   version: 2
 
-  validate:
+  validate_and_deploy:
     jobs:
-      - ansible
-      - packer
-      - terraform:
+      - install_ansible_roles
+      - validate_packer
+      - validate_terraform:
           requires:
-            - ansible
+            - install_ansible_roles
+      - deploy_env:
+          filters:
+            branches:
+              only:
+                - master
+                - circle-deploy
+          requires:
+            - validate_packer
+            - validate_terraform

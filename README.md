@@ -109,53 +109,28 @@ Currently, both the management and environment VPCs will be deployed in the same
 
 ### Application environment
 
-1. Create the Terraform variables file.
-
-    ```sh
-    cd ../env
-    cp terraform.tfvars.example terraform.tfvars
-    ```
-
-1. Fill out [`terraform.tfvars`](terraform/env/terraform.tfvars.example). This file *SHOULD NOT* be checked into source control.
-1. Set up Terraform.
-
-    ```sh
-    terraform init "-backend-config=bucket=$(cd ../mgmt && terraform output env_backend_bucket)"
-    ```
-
-1. Bootstrap the environment using Terraform.
-
-    ```sh
-    terraform apply -target=aws_route53_record.db
-    ```
-
-    _NOTE: Ditto the [above](#management-environment) regarding circular dependency._
-
-1. Run the steps below to create the Wordpress AMI. Note that this can be used for updating the Wordpress AMI in CI/CD later.
-    1. Build the AMI.
+1. [Create an access key for the deployer user.](https://console.aws.amazon.com/iam/home#/users/circleci-deployer?section=security_credentials)
+1. Set up CircleCI for the project.
+    * [Specify environment variables](https://circleci.com/docs/2.0/env-vars/#adding-environment-variables-in-the-app):
+        * [The required AWS configuration](https://www.terraform.io/docs/providers/aws/index.html#environment-variables)
+        * `TF_ENV_BUCKET` - get via `terraform output env_backend_bucket`
+        * `TF_VAR_db_pass`
+        * `TF_VAR_general_availability_endpoint`
+    * Generate a deployer key, and add it under the project settings.
 
         ```sh
-        packer build \
-        -var db_host=$(terraform output db_host) \
-        -var db_name=$(terraform output db_name) \
-        -var db_user=$(terraform output db_user) \
-        -var db_pass=$(terraform output db_pass) \
-        ../../packer/wordpress.json
+        ssh-keygen -t rsa -b 4096 -f id_rsa_circleci -C "something@some.gov" -N ""
+        cat id_rsa_circleci | pbcopy
+
+        # save as private key in CircleCI
+
+        rm id_rsa_circleci*
         ```
 
-    1. Deploy the latest AMI.
-
-        ```sh
-        terraform apply
-        ```
+    * The build will bootstrap the environment.
+1. Visit the site, which is the `url` output from Terraform at the end of the CircleCI run, to complete WordPress setup.
 
 Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
-
-1. Visit the setup page.
-
-    ```sh
-    open $(terraform output url)wp-admin/install.php
-    ```
 
 #### Troubleshooting
 
@@ -163,6 +138,15 @@ To SSH into the running WordPress instance:
 
 ```sh
 ssh $(terraform output ssh_user)@$(terraform output public_ip)
+```
+
+## Build container
+
+Part of the build runs in [a custom container](https://hub.docker.com/r/18fgsa/devsecops-builder/). To update it:
+
+```sh
+docker build --pull -t 18fgsa/devsecops-builder:alpine - < Dockerfile
+docker push 18fgsa/devsecops-builder:alpine
 ```
 
 ## Cleanup
