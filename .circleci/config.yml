@@ -1,29 +1,10 @@
 version: 2
 jobs:
-  install_ansible_roles:
-    docker:
-      - image: williamyeh/ansible:alpine3
-    steps:
-      - checkout
-      - run:
-          name: Install Ansible dependencies
-          command: apk add --no-cache git
-      - run:
-          name: Download Ansible dependencies
-          command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./*
-
   validate_packer:
     docker:
       - image: hashicorp/packer:light
     steps:
       - checkout
-      - run:
-          name: Validate Jenkins template
-          command: packer validate -syntax-only packer/jenkins.json
       - run:
           name: Validate WordPress template
           command: packer validate -syntax-only packer/wordpress.json
@@ -32,9 +13,7 @@ jobs:
     docker:
       - image: hashicorp/terraform:light
     steps:
-      - attach_workspace:
-          at: .
-
+      - checkout
       - run:
           name: Create fake SSH public key
           command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
@@ -65,7 +44,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - terraform/env/.terraform/*
+            - ./*
 
   deploy_env:
     docker:
@@ -83,6 +62,10 @@ jobs:
           name: Bootstrap the environment
           command: terraform apply -input=false -auto-approve -target=aws_route53_record.db
           working_directory: ~/project/terraform/env
+
+      - run:
+          name: Download Ansible dependencies
+          command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
 
       - run:
           name: Build WordPress AMI
@@ -105,11 +88,8 @@ workflows:
 
   validate_and_deploy:
     jobs:
-      - install_ansible_roles
       - validate_packer
-      - validate_terraform:
-          requires:
-            - install_ansible_roles
+      - validate_terraform
       - deploy_env:
           filters:
             branches:

@@ -8,7 +8,7 @@ This is just an example implementation of the GSA DevSecOps principles/component
 
 ## Architecture
 
-Jenkins is deployed to a hardened Red Hat Enterprise Linux (RHEL) EC2 instance, in a `mgmt` ("management") VPC.
+A `mgmt` ("management") VPC is created.
 
 WordPress runs on a hardened Ubuntu 16.04 EC2 instance in a public subnet, and connects to a MySQL RDS instance in a private subnet. All of this is isolated in an `env` ("environment") VPC.
 
@@ -66,46 +66,11 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform init "-backend-config=bucket=$(cd ../bootstrap && terraform output bucket)"
     ```
 
-1. Bootstrap the environment using Terraform.
+1. Create the management VPC.
 
     ```sh
-    terraform apply -target=aws_eip.jenkins
+    terraform apply
     ```
-
-    _NOTE: There is a circular dependency between the Terraform and Packer configurations. This workaround only creates the subset of the environment required for the AMI build._
-
-1. Create the Jenkins secrets.
-    1. Create a secrets file. _Note that, for simplicity, we're putting the secrets in a file not checked into version control. A real project should put the secrets in a [Vault](https://docs.ansible.com/ansible/latest/vault.html)._
-
-        ```sh
-        cp ../../ansible/group_vars/jenkins/secrets.yml.example ../../ansible/group_vars/jenkins/secrets.yml
-        ```
-
-    1. [Generate an SSH key.](https://github.com/GSA/jenkins-deploy#usage)
-    1. Fill out the secrets file ([`ansible/group_vars/jenkins/secrets.yml`](../ansible/group_vars/jenkins/secrets.yml.example)). This file SHOULD BE VAULTED with [ansible-vault](https://docs.ansible.com/ansible/2.4/vault.html).
-1. Run the deployment steps. These steps can be used later to create a new packer build of the jenkins AMI.
-    1. Run the following to deploy Jenkins or any other changes to `mgmt`.
-
-        ```sh
-        packer build \
-        -var jenkins_host=$(terraform output jenkins_host) \
-        ../../packer/jenkins.json
-
-        terraform apply
-        ```
-
-1. Create the Jenkins pipeline. Note that you will have to login to Jenkins first, using the password specified in the secrets.yml file.
-    1. Visit [Blue Ocean](https://jenkins.io/projects/blueocean/) interface.
-
-        ```sh
-        open https://$(terraform output jenkins_host)/blue/
-        ```
-
-    1. Select `GitHub`.
-    1. Use an access token from a shared user.
-    1. For the GitHub organization, select `GSA`.
-    1. Select `New Pipeline`.
-    1. Select this repository.
 
 ### Application environment
 
