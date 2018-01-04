@@ -63,9 +63,10 @@ jobs:
           command: terraform apply -input=false -auto-approve -target=aws_route53_record.db
           working_directory: ~/project/terraform/env
 
-      - run:
-          name: Download Ansible dependencies
-          command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
+      # this command fails if the requirements.yml is empty
+      # - run:
+      #     name: Download Ansible dependencies
+      #     command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
 
       - run:
           name: Build WordPress AMI
@@ -93,9 +94,7 @@ workflows:
       - deploy_env:
           filters:
             branches:
-              only:
-                - master
-                - circle-deploy
+              only: master
           requires:
             - validate_packer
             - validate_terraform
