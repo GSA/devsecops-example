@@ -20,7 +20,7 @@ jobs:
 
       - run:
           name: bootstrap - Set up Terraform
-          command: cd terraform/bootstrap && terraform init -backend=false
+          command: cd terraform/bootstrap && terraform init -backend=false -input=false
       - run:
           name: bootstrap - Validate Terraform
           command: cd terraform/bootstrap && terraform validate
@@ -30,14 +30,14 @@ jobs:
           command: cd terraform/mgmt && cp terraform.tfvars.example terraform.tfvars
       - run:
           name: mgmt - Set up Terraform
-          command: cd terraform/mgmt && terraform init -backend=false
+          command: cd terraform/mgmt && terraform init -backend=false -input=false
       - run:
           name: mgmt - Validate Terraform
           command: cd terraform/mgmt && terraform validate
 
       - run:
           name: env - Set up Terraform
-          command: cd terraform/env && terraform init "-backend-config=bucket=$TF_ENV_BUCKET"
+          command: cd terraform/env && terraform init "-backend-config=bucket=$TF_ENV_BUCKET" -input=false
       - run:
           name: env - Validate Terraform
           command: cd terraform/env && terraform validate
