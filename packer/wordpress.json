@@ -6,7 +6,7 @@
     "db_pass": null,
     "region": "{{env `AWS_DEFAULT_REGION`}}",
     "ssh_username": "ubuntu"
-  },
+  },asdasg
   "provisioners": [
     {
       "type": "ansible",
