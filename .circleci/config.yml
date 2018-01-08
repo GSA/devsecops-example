@@ -20,7 +20,8 @@ jobs:
 
       - run:
           name: bootstrap - Set up Terraform
-          command: cd terraform/bootstrap && terraform init -backend=false -input=false
+          command: terraform init -backend=false -input=false
+          working_directory: ~/project/terraform/bootstrap
       - run:
           name: bootstrap - Validate Terraform
           command: cd terraform/bootstrap && terraform validate
