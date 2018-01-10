@@ -34,14 +34,13 @@ Currently, both the management and environment VPCs will be deployed in the same
     ```sh
     ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
     ```
-
-### Management environment
-
 1. Specify a region ([options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions)).
 
     ```sh
     export AWS_DEFAULT_REGION=...
     ```
+
+### Bootstrap
 
 1. [Create the base AMIs](https://github.com/GSA/security-benchmarks#base-images), if they aren't shared with your AWS account already.
 1. Set up the Terraform backend.
@@ -51,6 +50,8 @@ Currently, both the management and environment VPCs will be deployed in the same
     terraform init
     terraform apply
     ```
+
+### Management environment
 
 1. Create the Terraform variables file.
 
