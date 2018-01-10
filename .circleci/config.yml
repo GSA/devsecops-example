@@ -14,9 +14,6 @@ jobs:
       - image: hashicorp/terraform:light
     steps:
       - checkout
-      - run:
-          name: Create fake SSH public key
-          command: mkdir -p ~/.ssh && touch ~/.ssh/id_rsa.pub
 
       - run:
           name: bootstrap - Set up Terraform
@@ -24,24 +21,30 @@ jobs:
           working_directory: ~/project/terraform/bootstrap
       - run:
           name: bootstrap - Validate Terraform
-          command: cd terraform/bootstrap && terraform validate
+          command: terraform validate
+          working_directory: ~/project/terraform/bootstrap
 
       - run:
           name: mgmt - Create Terraform variables file
-          command: cd terraform/mgmt && cp terraform.tfvars.example terraform.tfvars
+          command: cp terraform.tfvars.example terraform.tfvars
+          working_directory: ~/project/terraform/mgmt
       - run:
           name: mgmt - Set up Terraform
-          command: cd terraform/mgmt && terraform init -backend=false -input=false
+          command: terraform init -backend=false -input=false
+          working_directory: ~/project/terraform/mgmt
       - run:
           name: mgmt - Validate Terraform
-          command: cd terraform/mgmt && terraform validate
+          command: terraform validate
+          working_directory: ~/project/terraform/mgmt
 
       - run:
           name: env - Set up Terraform
-          command: cd terraform/env && terraform init "-backend-config=bucket=$TF_ENV_BUCKET" -input=false
+          command: terraform init "-backend-config=bucket=$TF_ENV_BUCKET" -input=false
+          working_directory: ~/project/terraform/env
       - run:
           name: env - Validate Terraform
-          command: cd terraform/env && terraform validate
+          command: terraform validate
+          working_directory: ~/project/terraform/env
       - persist_to_workspace:
           root: .
           paths:
