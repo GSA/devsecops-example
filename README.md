@@ -111,6 +111,9 @@ ssh $(terraform output ssh_user)@$(terraform output public_ip)
 Part of the build runs in [a custom container](https://hub.docker.com/r/18fgsa/devsecops-builder/). To update it:
 
 ```sh
+docker --version
+# make sure you have v17.05+
+
 docker build --pull -t 18fgsa/devsecops-builder:alpine - < Dockerfile
 docker push 18fgsa/devsecops-builder:alpine
 ```
