@@ -5,4 +5,4 @@ FROM williamyeh/ansible:alpine3
 COPY --from=packer /bin/packer /bin/packer
 COPY --from=terraform /bin/terraform /bin/terraform
 
-RUN apk add --no-cache make
+RUN apk add --no-cache git make
