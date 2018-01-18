@@ -50,17 +50,12 @@ jobs:
           paths:
             - ./*
 
-  deploy_env:
+  build_ami:
     docker:
       - image: 18fgsa/devsecops-builder:alpine
     steps:
       - attach_workspace:
           at: .
-
-      - add_ssh_keys
-      - run:
-          name: Disable host key checking
-          command: printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
 
       - run:
           name: Bootstrap the environment
@@ -83,6 +78,19 @@ jobs:
               ../../packer/wordpress.json
           working_directory: ~/project/terraform/env
 
+  # AMI builds are slow, so keeping the environment deploy separate so it can be re-run separately if needed
+  deploy_env:
+    docker:
+      - image: 18fgsa/devsecops-builder:alpine
+    steps:
+      - attach_workspace:
+          at: .
+
+      - add_ssh_keys
+      - run:
+          name: Disable host key checking
+          command: printf "\nHost *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
+
       - run:
           name: Deploy the full environment
           command: terraform apply -input=false -auto-approve
@@ -95,10 +103,16 @@ workflows:
     jobs:
       - validate_packer
       - validate_terraform
-      - deploy_env:
+      - build_ami:
           filters:
             branches:
               only: master
           requires:
             - validate_packer
             - validate_terraform
+      - deploy_env:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build_ami
