@@ -1,19 +1,20 @@
 version: 2
 jobs:
-  validate_packer:
+  install_and_validate:
     docker:
-      - image: hashicorp/packer:light
+      - image: 18fgsa/devsecops-builder:alpine
     steps:
       - checkout
+
+      # this command fails if the requirements.yml is empty
+      # - run:
+      #     name: Download Ansible dependencies
+      #     command: ansible-galaxy install -p roles -r requirements.yml
+      #     working_directory: ~/project/ansible
+
       - run:
           name: Validate WordPress template
           command: packer validate -syntax-only packer/wordpress.json
-
-  validate_terraform:
-    docker:
-      - image: hashicorp/terraform:light
-    steps:
-      - checkout
 
       - run:
           name: bootstrap - Set up Terraform
@@ -45,6 +46,7 @@ jobs:
           name: env - Validate Terraform
           command: terraform validate
           working_directory: ~/project/terraform/env
+
       - persist_to_workspace:
           root: .
           paths:
@@ -61,11 +63,6 @@ jobs:
           name: Bootstrap the environment
           command: terraform apply -input=false -auto-approve -target=aws_route53_record.db
           working_directory: ~/project/terraform/env
-
-      # this command fails if the requirements.yml is empty
-      # - run:
-      #     name: Download Ansible dependencies
-      #     command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
 
       - run:
           name: Build WordPress AMI
@@ -101,15 +98,13 @@ workflows:
 
   validate_and_deploy:
     jobs:
-      - validate_packer
-      - validate_terraform
+      - install_and_validate
       - build_ami:
           filters:
             branches:
               only: master
           requires:
-            - validate_packer
-            - validate_terraform
+            - install_and_validate
       - deploy_env:
           filters:
             branches:
