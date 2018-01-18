@@ -11,6 +11,10 @@ jobs:
       #     name: Download Ansible dependencies
       #     command: ansible-galaxy install -p roles -r requirements.yml
       #     working_directory: ~/project/ansible
+      - run:
+          name: Validate Ansible playbook
+          command: ansible-playbook --syntax-check -i "localhost," -c local wordpress.yml
+          working_directory: ~/project/ansible
 
       - run:
           name: Validate WordPress template
