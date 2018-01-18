@@ -32,8 +32,9 @@ Currently, both the management and environment VPCs will be deployed in the same
 1. Install Ansible dependencies.
 
     ```sh
-    ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
+    make roles
     ```
+
 1. Specify a region ([options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions)).
 
     ```sh
