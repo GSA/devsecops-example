@@ -77,27 +77,61 @@ Currently, both the management and environment VPCs will be deployed in the same
 ### Application environment
 
 1. [Create an access key for the deployer user.](https://console.aws.amazon.com/iam/home#/users/circleci-deployer?section=security_credentials)
-1. Set up CircleCI for the project.
-    * [Specify environment variables](https://circleci.com/docs/2.0/env-vars/#adding-environment-variables-in-the-app):
-        * [The required AWS configuration](https://www.terraform.io/docs/providers/aws/index.html#environment-variables)
-        * `TF_ENV_BUCKET` - get via `terraform output env_backend_bucket`
-        * `TF_VAR_db_pass`
-        * `TF_VAR_general_availability_endpoint`
-    * Generate a deployer key, and add it under the project settings.
-
-        ```sh
-        ssh-keygen -t rsa -b 4096 -f id_rsa_circleci -C "something@some.gov" -N ""
-        cat id_rsa_circleci | pbcopy
-
-        # save as private key in CircleCI
-
-        rm id_rsa_circleci*
-        ```
-
-    * The build will bootstrap the environment.
-1. Visit the site, which is the `url` output from Terraform at the end of the CircleCI run, to complete WordPress setup.
+1. Follow either the CircleCI or manual steps below.
+1. Visit the site, which is the `url` output from Terraform, to complete WordPress setup.
 
 Note that if the public IP address changes after you set up the site initially, you will need to [change the site URL](https://codex.wordpress.org/Changing_The_Site_URL#Changing_the_Site_URL) in WordPress.
+
+#### CircleCI
+
+To set up CircleCI for the project:
+
+* [Specify environment variables](https://circleci.com/docs/2.0/env-vars/#adding-environment-variables-in-the-app):
+    * [The required AWS configuration](https://www.terraform.io/docs/providers/aws/index.html#environment-variables)
+    * `TF_ENV_BUCKET` - get via `terraform output env_backend_bucket`
+    * `TF_VAR_db_pass`
+    * `TF_VAR_general_availability_endpoint`
+* Generate a deployer key, and add it under the project settings.
+
+    ```sh
+    ssh-keygen -t rsa -b 4096 -f id_rsa_circleci -C "something@some.gov" -N ""
+    cat id_rsa_circleci | pbcopy
+
+    # save as private key in CircleCI
+
+    rm id_rsa_circleci*
+    ```
+
+* The build will bootstrap the environment.
+
+#### Manual
+
+To set up / deploy Terraform's environment configuration on your local machine:
+
+1. Set up Terraform.
+
+    ```sh
+    cd ../env
+    terraform init "-backend-config=bucket=$(cd ../mgmt && terraform output env_backend_bucket)"
+    ```
+
+1. Bootstrap the environment.
+
+    ```sh
+    terraform apply -target=aws_route53_record.db
+    ```
+
+1. Create the AMI, making sure to pass your database password.
+
+    ```sh
+    TF_VAR_db_pass=<db_pass> make ami
+    ```
+
+1. Deploy the rest of the environment.
+
+    ```sh
+    terraform apply
+    ```
 
 #### Troubleshooting
 
