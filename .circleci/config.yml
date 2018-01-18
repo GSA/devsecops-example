@@ -48,14 +48,7 @@ jobs:
 
       - run:
           name: Build WordPress AMI
-          command: |
-            packer build \
-              -var db_host=$(terraform output db_host) \
-              -var db_name=$(terraform output db_name) \
-              -var db_user=$(terraform output db_user) \
-              -var "db_pass=${TF_VAR_db_pass}" \
-              ../../packer/wordpress.json
-          working_directory: ~/project/terraform/env
+          command: make ami
 
   # AMI builds are slow, so keeping the environment deploy separate so it can be re-run separately if needed
   deploy_env:
