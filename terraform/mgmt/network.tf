@@ -1,9 +1,13 @@
+locals {
+  azs = ["${data.aws_region.current.name}${var.az}"]
+}
+
 module "network" {
   source = "terraform-aws-modules/vpc/aws"
   # Newest v1.11.0 released 12/11/17 fixes additional private subnet issue.
   version = ">= 1.11.0"
 
-  azs = ["${data.aws_region.current.name}${var.az}"]
+  azs = ["${local.azs}"]
   cidr = "${var.vpc_cidr}"
   enable_dns_hostnames = true
   enable_dns_support = true
