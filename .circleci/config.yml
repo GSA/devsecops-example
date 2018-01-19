@@ -6,27 +6,9 @@ jobs:
     steps:
       - checkout
 
-      # this command fails if the requirements.yml is empty
-      # - run:
-      #     name: Download Ansible dependencies
-      #     command: ansible-galaxy install -p roles -r requirements.yml
-      #     working_directory: ~/project/ansible
-      - run:
-          name: Validate Ansible playbook
-          command: ansible-playbook --syntax-check -i "localhost," -c local wordpress.yml
-          working_directory: ~/project/ansible
-
-      - run:
-          name: Validate WordPress template
-          command: packer validate -syntax-only packer/wordpress.json
-
       - run:
           name: bootstrap - Set up Terraform
           command: terraform init -backend=false -input=false
-          working_directory: ~/project/terraform/bootstrap
-      - run:
-          name: bootstrap - Validate Terraform
-          command: terraform validate
           working_directory: ~/project/terraform/bootstrap
 
       - run:
@@ -37,19 +19,15 @@ jobs:
           name: mgmt - Set up Terraform
           command: terraform init -backend=false -input=false
           working_directory: ~/project/terraform/mgmt
-      - run:
-          name: mgmt - Validate Terraform
-          command: terraform validate
-          working_directory: ~/project/terraform/mgmt
 
       - run:
           name: env - Set up Terraform
           command: terraform init "-backend-config=bucket=$TF_ENV_BUCKET" -input=false
           working_directory: ~/project/terraform/env
+
       - run:
-          name: env - Validate Terraform
-          command: terraform validate
-          working_directory: ~/project/terraform/env
+          name: Run validations
+          command: make validate
 
       - persist_to_workspace:
           root: .
@@ -70,14 +48,7 @@ jobs:
 
       - run:
           name: Build WordPress AMI
-          command: |
-            packer build \
-              -var db_host=$(terraform output db_host) \
-              -var db_name=$(terraform output db_name) \
-              -var db_user=$(terraform output db_user) \
-              -var "db_pass=${TF_VAR_db_pass}" \
-              ../../packer/wordpress.json
-          working_directory: ~/project/terraform/env
+          command: make ami
 
   # AMI builds are slow, so keeping the environment deploy separate so it can be re-run separately if needed
   deploy_env:
