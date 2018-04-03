@@ -47,8 +47,8 @@ jobs:
           command: terraform init "-backend-config=bucket=$TF_ENV_BUCKET" -input=false
           working_directory: ~/project/terraform/env
       - run:
-          name: env - Validate Terraform
-          command: terraform validate
+          name: env - Create Terraform execution plan
+          command: terraform plan -input=false
           working_directory: ~/project/terraform/env
 
       - persist_to_workspace:
