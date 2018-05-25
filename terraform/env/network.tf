@@ -29,11 +29,12 @@ module "network" {
   }
 }
 
-module "spoke" {
-  source = "github.com/GSA/grace-core//terraform/spoke"
-
-  vpc_id = "${module.network.vpc_id}"
-}
+# leaving commented out, because we don't want to actually open up a VPN connection to on-prem
+# module "spoke" {
+#   source = "github.com/GSA/grace-core//terraform/spoke"
+#
+#   vpc_id = "${module.network.vpc_id}"
+# }
 
 # ensure uniqueness within an account
 resource "random_pet" "flow_logs" {}
