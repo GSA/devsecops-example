@@ -10,7 +10,7 @@ This is just an example implementation of the GSA DevSecOps principles/component
 
 A `mgmt` ("management") VPC is created.
 
-WordPress runs on a hardened Ubuntu 16.04 EC2 instance in a public subnet, and connects to a MySQL RDS instance in a private subnet. All of this is isolated in an `env` ("environment") VPC.
+WordPress runs on a hardened Ubuntu 16.04 EC2 instance in a public subnet, and connects to a MySQL RDS instance in a private subnet. All of this is isolated in an `env` ("environment") VPC, which is set up with [a VPN to a central Transit VPC](https://github.com/GSA/grace-core/tree/master/terraform/spoke).
 
 Currently, both the management and environment VPCs will be deployed in the same account, but we are moving to having them separate.
 

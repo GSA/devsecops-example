@@ -17,6 +17,19 @@ module "network" {
   public_subnets       = ["${cidrsubnet(var.vpc_cidr, 8, 0)}"]
   enable_nat_gateway   = true
   cidr                 = "${var.vpc_cidr}"
+
+  # just for demonstration purposes - not otherwise used
+  private_subnets = ["${cidrsubnet(var.vpc_cidr, 8, 1)}"]
+
+  # per https://docs.aws.amazon.com/solutions/latest/cisco-based-transit-vpc/step3.html
+  propagate_private_route_tables_vgw = true
+}
+
+module "spoke" {
+  source = "github.com/GSA/grace-core//terraform/spoke"
+
+  num_gateway_subnets = "1"
+  gateway_subnet_ids  = "${module.network.private_subnets}"
 }
 
 # ensure uniqueness within an account
