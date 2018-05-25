@@ -18,18 +18,21 @@ module "network" {
   enable_nat_gateway   = true
   cidr                 = "${var.vpc_cidr}"
 
-  # just for demonstration purposes - not otherwise used
-  private_subnets = ["${cidrsubnet(var.vpc_cidr, 8, 1)}"]
-
   # per https://docs.aws.amazon.com/solutions/latest/cisco-based-transit-vpc/step3.html
+  enable_vpn_gateway                 = true
   propagate_private_route_tables_vgw = true
+
+  tags = {
+    # only actually need it on the VPN gateway, but this is the only way to do it as of module 1.32.0
+    # https://docs.aws.amazon.com/solutions/latest/cisco-based-transit-vpc/step3.html
+    "transitvpc:spoke" = "true"
+  }
 }
 
 module "spoke" {
   source = "github.com/GSA/grace-core//terraform/spoke"
 
-  num_gateway_subnets = "1"
-  gateway_subnet_ids  = "${module.network.private_subnets}"
+  vpc_id = "${module.network.vpc_id}"
 }
 
 # ensure uniqueness within an account
