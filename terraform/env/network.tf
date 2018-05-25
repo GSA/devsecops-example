@@ -17,7 +17,24 @@ module "network" {
   public_subnets       = ["${cidrsubnet(var.vpc_cidr, 8, 0)}"]
   enable_nat_gateway   = true
   cidr                 = "${var.vpc_cidr}"
+
+  # per https://docs.aws.amazon.com/solutions/latest/cisco-based-transit-vpc/step3.html
+  enable_vpn_gateway                 = true
+  propagate_private_route_tables_vgw = true
+
+  tags = {
+    # only actually need it on the VPN gateway, but this is the only way to do it as of module 1.32.0
+    # https://docs.aws.amazon.com/solutions/latest/cisco-based-transit-vpc/step3.html
+    "transitvpc:spoke" = "true"
+  }
 }
+
+# leaving commented out, because we don't want to actually open up a VPN connection to on-prem
+# module "spoke" {
+#   source = "github.com/GSA/grace-core//terraform/spoke"
+#
+#   vpc_id = "${module.network.vpc_id}"
+# }
 
 # ensure uniqueness within an account
 resource "random_pet" "flow_logs" {}
