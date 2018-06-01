@@ -1,0 +1,28 @@
+{
+  "variables": {
+    "region": "{{env `AWS_DEFAULT_REGION`}}",
+    "ssh_username": "ubuntu"
+  },
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "../../ansible/egress_proxy.yml",
+      "extra_arguments": ["--extra-vars", ""],
+      "user": "{{user `ssh_username`}}"
+    }
+  ],
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "{{user `region`}}",
+    "source_ami_filter": {
+      "filters": {
+        "name": "ubuntu16-base-*"
+      },
+      "owners": ["self"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ssh_username": "{{user `ssh_username`}}",
+    "ami_name": "egress_proxy {{timestamp}}"
+  }]
+}

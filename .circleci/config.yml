@@ -56,7 +56,7 @@ jobs:
           paths:
             - ./*
 
-  build_ami:
+  build_wordpress_ami:
     docker:
       - image: 18fgsa/devsecops-builder:alpine
     steps:
@@ -77,6 +77,25 @@ jobs:
               -var db_user=$(terraform output db_user) \
               -var "db_pass=${TF_VAR_db_pass}" \
               ../../packer/wordpress.json
+          working_directory: ~/project/terraform/env
+
+  build_egress_proxy_ami:
+    docker:
+      - image: 18fgsa/devsecops-builder:alpine
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Install required roles from Ansible Galaxy
+          command: ansible-galaxy install -p ansible/roles -r ansible/requirements.yml
+          working_directory: ~/project
+
+      - run:
+          name: Build Egress Proxy Squid AMI
+          command: |
+            packer build \
+              ../../packer/egress_proxy.json
           working_directory: ~/project/terraform/env
 
   # AMI builds are slow, so keeping the environment deploy separate so it can be re-run separately if needed
@@ -103,7 +122,13 @@ workflows:
   validate_and_deploy:
     jobs:
       - install_and_validate
-      - build_ami:
+      - build_wordpress_ami:
+          filters:
+            branches:
+              only: master
+          requires:
+            - install_and_validate
+      - build_egress_proxy_ami:
           filters:
             branches:
               only: master
@@ -114,4 +139,6 @@ workflows:
             branches:
               only: master
           requires:
-            - build_ami
+            - install_and_validate
+            - build_wordpress_ami
+            - build_egress_proxy_ami

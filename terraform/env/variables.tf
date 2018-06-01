@@ -28,6 +28,10 @@ variable "wordpress_iam_role_name" {
   default = "wordpress_role"
 }
 
+variable "egress_proxy_iam_role_name" {
+  default = "egress_proxy_role"
+}
+
 variable "sns_general_availability_topic_name" {
   default = "devsecops-example-availability-alarms"
 }
