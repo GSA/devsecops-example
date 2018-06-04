@@ -7,15 +7,22 @@
     wp_install_dir: /usr/share/wordpress
     wp_content_dir: "{{ wp_install_dir }}/wp-content"
 
-    pre_tasks:
-      - name: Wait until boot finished
-        wait_for:
-          path: /var/lib/cloud/instance/boot-finished
-          state: present
-      - name: Wait for automatic system updates
-        become: yes
-        shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;
-
+  pre_tasks:
+    - name: Wait until boot finished
+      wait_for:
+        path: /var/lib/cloud/instance/boot-finished
+        state: present
+    - name: Wait for automatic system updates
+      become: yes
+      shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;
+    - name: Update apt/dpkg cache
+      apt:
+      update_cache: yes
+    - name: wait 10 seconds
+      wait_for:
+        timeout: 10
+        delay: 10
+      
   tasks:
 
     # based on
