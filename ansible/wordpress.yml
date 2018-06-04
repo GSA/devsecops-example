@@ -6,6 +6,16 @@
     apache_group: "{{ apache_user }}"
     wp_install_dir: /usr/share/wordpress
     wp_content_dir: "{{ wp_install_dir }}/wp-content"
+
+    pre_tasks:
+      - name: Wait until boot finished
+        wait_for:
+          path: /var/lib/cloud/instance/boot-finished
+          state: present
+      - name: Wait for automatic system updates
+        become: yes
+        shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;
+
   tasks:
 
     # based on
