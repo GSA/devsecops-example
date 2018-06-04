@@ -15,7 +15,14 @@
     - name: Wait for automatic system updates
       become: yes
       shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;
-
+    - name: Update apt/dpkg cache
+      apt:
+      update_cache: yes
+    - name: wait 10 seconds
+      wait_for:
+        timeout: 10
+        delay: 10
+      
   tasks:
 
     # based on
