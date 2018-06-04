@@ -32,6 +32,14 @@ variable "egress_proxy_iam_role_name" {
   default = "egress_proxy_role"
 }
 
+variable "egress_proxy_port" {
+  default = 3128
+}
+
+variable "egress_proxy_acls" {
+  default = []
+}
+
 variable "sns_general_availability_topic_name" {
   default = "devsecops-example-availability-alarms"
 }
