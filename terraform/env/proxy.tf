@@ -1,7 +1,8 @@
 resource "aws_lb" "egress_proxy_nlb" {
-  load_balancer_type         = "network"
-  internal                   = true
-  subnets                    = ["${module.network.private_subnets}"]
+  load_balancer_type = "network"
+  internal           = true
+  subnets            = ["${module.network.public_subnets}"]
+
   enable_deletion_protection = false
 }
 
@@ -13,10 +14,9 @@ resource "aws_lb_target_group" "egress_proxy_nlb" {
 }
 
 resource "aws_lb_target_group_attachment" "egress_proxy_nlb" {
-  availability_zone = "all"
-  target_group_arn  = "${aws_lb_target_group.egress_proxy_nlb.arn}"
-  target_id         = "${aws_instance.egress_proxy.id}"
-  port              = "${var.egress_proxy_port}"
+  target_group_arn = "${aws_lb_target_group.egress_proxy_nlb.arn}"
+  target_id        = "${aws_instance.egress_proxy.id}"
+  port             = "${var.egress_proxy_port}"
 }
 
 resource "aws_lb_listener" "egress_proxy_nlb" {
