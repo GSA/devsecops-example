@@ -4,7 +4,7 @@
   vars:
     squid_acls: "{{ squid_acls }}"
     squid_http_port: "{{ squid_http_port }}"
-    
+
   pre_tasks:
     - name: Wait until boot finished
       wait_for:
@@ -13,13 +13,15 @@
     - name: Wait for automatic system updates
       become: yes
       shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;
-    - name: Update apt/dpkg cache
-      apt:
-      update_cache: yes
     - name: wait 10 seconds
       wait_for:
         timeout: 10
-        delay: 10
+    - name: Update apt/dpkg cache
+      apt:
+      update_cache: yes
+    - name: wait 5 seconds
+      wait_for:
+        timeout: 5
 
   roles:
     - kbrebanov.squid
