@@ -21,3 +21,11 @@ output "db_user" {
 output "url" {
   value = "http://${aws_eip.public.public_ip}/blog/"
 }
+
+output "egress_proxy_port" {
+  value = "${var.egress_proxy_port}"
+}
+
+output "egress_proxy_acls" {
+  value = "${var.egress_proxy_acls}"
+}

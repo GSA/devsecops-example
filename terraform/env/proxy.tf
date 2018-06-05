@@ -1,3 +1,35 @@
+resource "aws_lb" "egress_proxy_nlb" {
+  load_balancer_type = "network"
+  internal           = true
+  subnets            = ["${module.network.public_subnets}"]
+
+  enable_deletion_protection = false
+}
+
+resource "aws_lb_target_group" "egress_proxy_nlb" {
+  port        = "${var.egress_proxy_port}"
+  protocol    = "TCP"
+  vpc_id      = "${module.network.vpc_id}"
+  target_type = "instance"
+}
+
+resource "aws_lb_target_group_attachment" "egress_proxy_nlb" {
+  target_group_arn = "${aws_lb_target_group.egress_proxy_nlb.arn}"
+  target_id        = "${aws_instance.egress_proxy.id}"
+  port             = "${var.egress_proxy_port}"
+}
+
+resource "aws_lb_listener" "egress_proxy_nlb" {
+  load_balancer_arn = "${aws_lb.egress_proxy_nlb.arn}"
+  port              = "${var.egress_proxy_port}"
+  protocol          = "TCP"
+
+  "default_action" {
+    target_group_arn = "${aws_lb_target_group.egress_proxy_nlb.arn}"
+    type             = "forward"
+  }
+}
+
 data "aws_ami" "egress_proxy" {
   most_recent = true
 
@@ -42,8 +74,8 @@ resource "aws_security_group" "egress_proxy" {
 
   # HTTPS
   ingress {
-    from_port = 443
-    to_port   = 443
+    from_port = "${var.egress_proxy_port}"
+    to_port   = "${var.egress_proxy_port}"
     protocol  = "tcp"
 
     cidr_blocks = [

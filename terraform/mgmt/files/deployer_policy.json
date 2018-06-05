@@ -15,7 +15,7 @@
         "dynamodb:*",
         "ec2:*",
         "elasticbeanstalk:DescribeEnvironments",
-        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:*",
         "iam:*InstanceProfile*",
         "iam:*Role*",
         "logs:*",

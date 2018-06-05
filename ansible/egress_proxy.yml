@@ -1,7 +1,10 @@
 ---
 - hosts: all
   become: yes
-
+  vars:
+    squid_acls: "{{ squid_acls }}"
+    squid_http_port: "{{ squid_http_port }}"
+    
   pre_tasks:
     - name: Wait until boot finished
       wait_for:

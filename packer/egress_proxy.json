@@ -1,5 +1,7 @@
 {
   "variables": {
+    "squid_acls": null,
+    "squid_http_port": null,
     "region": "{{env `AWS_DEFAULT_REGION`}}",
     "ssh_username": "ubuntu"
   },
@@ -7,7 +9,7 @@
     {
       "type": "ansible",
       "playbook_file": "../../ansible/egress_proxy.yml",
-      "extra_arguments": ["--extra-vars", ""],
+      "extra_arguments": ["--extra-vars", "squid_acls={{user `squid_acls`}} squid_http_port={{user `squid_http_port`}}"],
       "user": "{{user `ssh_username`}}"
     }
   ],

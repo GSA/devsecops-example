@@ -95,6 +95,8 @@ jobs:
           name: Build Egress Proxy Squid AMI
           command: |
             packer build \
+              -var squid_http_port=$(terraform output egress_proxy_port) \
+              -var squid_acls=$(terraform output egress_proxy_acls) \
               ../../packer/egress_proxy.json
           working_directory: ~/project/terraform/env
 
