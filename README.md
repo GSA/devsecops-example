@@ -12,13 +12,18 @@ A `mgmt` ("management") VPC is created.
 
 WordPress runs on a hardened Ubuntu 16.04 EC2 instance in a public subnet, and connects to a MySQL RDS instance in a private subnet. All of this is isolated in an `env` ("environment") VPC, which is set up with [a VPN to a central Transit VPC](https://github.com/GSA/grace-core/tree/master/terraform/spoke).
 
+Squid runs on a hardened Ubuntu 16.04 EC2 instance in a public subnet and sits
+behind a [Network Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html)
+and acts an Egress Proxy for servers in the `env` ("environment") VPC.
+
 Currently, both the management and environment VPCs will be deployed in the same account, but we are moving to having them separate.
 
 ## What's here
 
 * [`terraform/`](terraform/env/) - [Terraform](https://www.terraform.io/) code for setting up the infrastructure at the [Amazon Web Services (AWS)](https://aws.amazon.com/) level, for a management account ([`mgmt/`](terraform/mgmt/)) and application environment(s) ([`env/`](terraform/env/))
 * [`packer.json`](packer.json) - [Packer](https://www.packer.io/) template for creating an [Amazon Machine Image (AMI)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
-* [`ansible/`](ansible/) - [Ansible](https://docs.ansible.com/ansible/latest/index.html) code for installing WordPress and doing other configuration within the [EC2](https://aws.amazon.com/ec2/) instance, which Packer turns into an AMI
+* [`ansible/`](ansible/) - [Ansible](https://docs.ansible.com/ansible/latest/index.html) code for installing and configuring WordPress and Squid on two [EC2](https://aws.amazon.com/ec2/)
+instances, which are made into AMIs via Packer.
 
 ## Setup
 
@@ -82,6 +87,8 @@ Currently, both the management and environment VPCs will be deployed in the same
         * `TF_ENV_BUCKET` - get via `terraform output env_backend_bucket`
         * `TF_VAR_db_pass`
         * `TF_VAR_general_availability_endpoint`
+        * `TF_VAR_egress_proxy_port` - default is 3128
+        * `TF_VAR_egress_proxy_acls` - default is `[]` see [Squid Docs](https://wiki.squid-cache.org/SquidFaq/SquidAcl#Access_Controls_in_Squid)
     * Generate a deployer key, and add it under the project settings.
 
         ```sh
